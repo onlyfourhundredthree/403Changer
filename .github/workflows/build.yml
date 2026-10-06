@@ -1,0 +1,60 @@
+name: Build and Release 403Changer
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install Inno Setup
+        run: choco install innosetup -y
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install psutil requests urllib3 websocket-client websockets Pillow pystray xxhash zstandard pyinstaller
+
+      - name: Build with PyInstaller
+        run: |
+          python scripts/build_pyinstaller.py
+
+      - name: Create Windows Installer
+        run: |
+          python scripts/create_installer.py
+
+      - name: Create Update Package
+        run: |
+          python scripts/create_update_package.py
+
+      - name: Upload Installer Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: 403Changer-Installer
+          path: installer/*.exe
+
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            installer/*.exe
+            installer/*.zip
+          draft: false
+          prerelease: false
+          generate_release_notes: true
