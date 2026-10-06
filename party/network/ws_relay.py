@@ -24,9 +24,9 @@ log = get_logger()
 try:
     from .relay_config import RELAY_URL as _CONFIGURED_URL
 except ImportError:
-    _CONFIGURED_URL = ""
+    _CONFIGURED_URL = "wss://403party.mamistikfistik.workers.dev/room"
 
-RELAY_URL = os.environ.get("ROSE_RELAY_URL", _CONFIGURED_URL)
+RELAY_URL = os.environ.get("CHANGER_RELAY_URL", os.environ.get("ROSE_RELAY_URL", _CONFIGURED_URL or "wss://403party.mamistikfistik.workers.dev/room"))
 PING_INTERVAL = 25.0
 CONNECT_TIMEOUT = 15.0
 # Wait before each reconnect attempt, in seconds
