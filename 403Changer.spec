@@ -103,7 +103,9 @@ def _pengu_path_excluded(rel_path: Path) -> bool:
     if rel_path.parts and rel_path.parts[0].lower() in PENGU_LOADER_EXCLUDED_ROOT_NAMES:
         return True
 
-    return name.endswith('.log') or name.endswith('.log.old')
+    # .bak is the copy build_pengu_core.py --install leaves behind; shipping it
+    # would put a second, stale core.dll in the installer
+    return name.endswith('.log') or name.endswith('.log.old') or name.endswith('.bak')
 
 if pengu_loader_dir.exists() and pengu_loader_dir.is_dir():
     if not (pengu_loader_dir / 'Pengu Loader.exe').exists():
