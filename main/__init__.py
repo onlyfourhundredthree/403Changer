@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Main entry point for Rose
+Main entry point for 403Changer
 """
 
 import argparse
@@ -13,7 +13,7 @@ from pathlib import Path
 MIN_PYTHON = (3, 11)
 if sys.version_info < MIN_PYTHON:
     raise RuntimeError(
-        f"Rose requires Python {MIN_PYTHON[0]}.{MIN_PYTHON[1]} or newer. "
+        f"403Changer requires Python {MIN_PYTHON[0]}.{MIN_PYTHON[1]} or newer. "
         "Please upgrade your interpreter and rebuild the application."
     )
 
@@ -287,7 +287,7 @@ def _show_dll_dialog(tools_dir, reason="missing", detail="") -> bool:
 
 
 def _sync_cslol_stub(tools_dir: Path) -> None:
-    """Replace cslol-dll.dll with Rose's stand-in when they differ.
+    """Replace cslol-dll.dll with 403Changer's stand-in when they differ.
 
     Updaters before this change skip cslol-dll.dll, so an update leaves the
     user's own copy in place. The stand-in ships again as cslol-dll.stub,
@@ -324,7 +324,7 @@ def _check_dll_present() -> bool:
     if status.eol is None:
         return _show_dll_dialog(tools_dir, reason="invalid")
     # The DLL keeps working past its end of life until League updates, so only
-    # block when the game Rose last found is a build it refuses
+    # block when the game 403Changer last found is a build it refuses
     league_path = get_config_option("General", "leaguePath")
     if status.expired_for(Path(league_path) if league_path else None):
         eol = datetime.fromtimestamp(status.eol).strftime("%Y-%m-%d %H:%M")
@@ -495,7 +495,7 @@ def _schedule_restart() -> bool:
 
 def run_league_unlock(args: Optional[argparse.Namespace] = None,
                       injection_threshold: Optional[float] = None) -> None:
-    """Run the core Rose application startup and main loop."""
+    """Run the core 403Changer application startup and main loop."""
     # Check for single instance before doing anything else
     check_single_instance()
 
@@ -639,9 +639,9 @@ def run_league_unlock(args: Optional[argparse.Namespace] = None,
 
 
 def main() -> None:
-    """Program entry point that prepares and launches Rose."""
+    """Program entry point that prepares and launches 403Changer."""
     args = setup_arguments()
-    # Update before checking the DLL: a Rose that refuses to start still
+    # Update before checking the DLL: a 403Changer that refuses to start still
     # receives the version that fixes its check
     if sys.platform == "win32":
         if not args.dev:

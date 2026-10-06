@@ -12,8 +12,7 @@ from pathlib import Path
 from typing import Optional
 
 from config import (
-    INJECTION_LOCK_TIMEOUT_S,
-    get_config_file_path
+    INJECTION_LOCK_TIMEOUT_S
 )
 from utils.core.logging import get_logger, log_action, log_success
 from utils.core.issue_reporter import report_issue
@@ -206,7 +205,6 @@ class InjectionManager:
         """Called during loadout countdown - no longer used (monitor starts with injection)"""
         # Monitor now starts when injection actually begins, not at T-1
         # This prevents unnecessary suspension for base skins and owned skins
-        pass
     
     def inject_skin_immediately(self, skin_name: str, stop_callback=None, chroma_id: int = None, champion_name: str = None, champion_id: int = None) -> bool:
         """Immediately inject a specific skin (with optional chroma)

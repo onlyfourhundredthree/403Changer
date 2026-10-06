@@ -98,9 +98,9 @@ def _choose_mod_file() -> Optional[Path]:
         except Exception:
             pass
         selected = filedialog.askopenfilename(
-            title="Select a Rose mod file",
+            title="Select a 403Changer mod file",
             filetypes=[
-                ("Rose mods", "*.fantome *.zip *.modpkg"),
+                ("403Changer mods", "*.fantome *.zip *.modpkg"),
                 ("Fantome mods", "*.fantome"),
                 ("ZIP mods", "*.zip"),
                 ("Mod packages", "*.modpkg"),
@@ -2612,7 +2612,7 @@ class MessageHandler:
             log.error(f"[SkinMonitor] Failed to launch Pengu Loader UI: {e}")
     
     def _handle_language_save(self, payload: dict) -> None:
-        """Save the language of Rose's menus ("auto": the client's) and tell the plugins"""
+        """Save the language of 403Changer's menus ("auto": the client's) and tell the plugins"""
         from utils.core.i18n import AUTO, LANGUAGES
         language = payload.get("language")
         if language != AUTO and language not in LANGUAGES:
@@ -3196,7 +3196,6 @@ class MessageHandler:
             if not party_manager:
                 # Initialize party manager
                 from party.core.party_manager import PartyManager
-                from lcu import LCU
 
                 # Get LCU instance from skin_scraper
                 lcu = self.skin_scraper.lcu if self.skin_scraper else None

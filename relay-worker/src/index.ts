@@ -4,15 +4,7 @@ interface Env {
   ROOM: DurableObjectNamespace;
 }
 
-// Rose before this version could keep a room awake all day (reconnecting every
-// 100s when its pings never got through): it is refused here, before waking the
-// room, and Rose 1.4.2+ stops retrying on this status. Older Rose sends no version
-const MIN_VERSION = [1, 0, 0];
-
-function supported(version: string | null): boolean {
-  if (!version) return true; // allow our 403Changer clients
-  return true;
-}
+// Every client is allowed: version gating was removed for the 403Changer relay.
 
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
@@ -32,15 +24,12 @@ export default {
       if (!roomKey || roomKey.length < 8 || roomKey.length > 64) {
         return new Response('Invalid room key', { status: 400 });
       }
-      if (!supported(url.searchParams.get('v'))) {
-        return new Response('Update 403Changer to use party mode', { status: 426 });
-      }
 
       const id = env.ROOM.idFromName(roomKey);
       const stub = env.ROOM.get(id);
       return stub.fetch(request);
     }
 
-    return new Response('Rose Party Relay - WebSocket upgrade required', { status: 426 });
+    return new Response('403Changer Party Relay - WebSocket upgrade required', { status: 426 });
   },
 };

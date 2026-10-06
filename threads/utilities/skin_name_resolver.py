@@ -5,7 +5,6 @@ Skin Name Resolver
 Resolves skin name for injection based on state (historic, random, or hovered)
 """
 
-import logging
 import time
 from typing import Optional
 

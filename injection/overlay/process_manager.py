@@ -7,7 +7,6 @@ Handles process management utilities for overlay processes
 
 import subprocess
 import time
-from pathlib import Path
 
 # Import psutil with fallback for development environments
 try:
@@ -44,7 +43,7 @@ class ProcessManager:
         self.kill_all_modtools_processes()
     
     def _mark_stopped_by_rose(self):
-        """Tag the current patcher before Rose stops it: its exit code (1 or 15)
+        """Tag the current patcher before 403Changer stops it: its exit code (1 or 15)
         is then not reported as an injection failure"""
         proc = self.current_overlay_process
         if proc is not None:

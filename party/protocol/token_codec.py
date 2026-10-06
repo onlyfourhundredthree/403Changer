@@ -21,7 +21,7 @@ log = get_logger()
 TOKEN_PREFIX = "403:"
 # Token version (v2 = WebSocket relay, no IP/port needed)
 TOKEN_VERSION = 2
-# Rose 1.3.1 and older reject tokens older than this, so tokens are
+# 403Changer 1.3.1 and older reject tokens older than this, so tokens are
 # re-encoded with a fresh timestamp whenever they're shown. Newer versions
 # accept any age: the party key is kept across sessions, so a token stays a
 # valid address for its owner's room.

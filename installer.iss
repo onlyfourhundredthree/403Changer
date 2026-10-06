@@ -40,7 +40,7 @@ VersionInfoVersion={#MyAppVersionInfo}
 VersionInfoCompany={#MyAppPublisher}
 VersionInfoDescription={#MyAppDescription}
 VersionInfoProductName={#MyAppName}
-; Prevent install/uninstall while Rose is running (mutex is created by the running app)
+; Prevent install/uninstall while 403Changer is running (mutex is created by the running app)
 AppMutex={#MyAppMutex}
 
 [Languages]
@@ -105,13 +105,13 @@ end;
 
 function InitializeUninstall(): Boolean;
 var
-  RoseRunning: Boolean;
+  ChangerRunning: Boolean;
   LeagueRunning: Boolean;
 begin
-  RoseRunning := CheckForMutexes('{#MyAppMutex}');
+  ChangerRunning := CheckForMutexes('{#MyAppMutex}');
   LeagueRunning := _IsLeagueRunning();
 
-  if RoseRunning and LeagueRunning then
+  if ChangerRunning and LeagueRunning then
   begin
     MsgBox(
       '{#MyAppName} and League of Legends are both currently running.'#13#10 +
@@ -123,7 +123,7 @@ begin
     exit;
   end;
 
-  if RoseRunning then
+  if ChangerRunning then
   begin
     MsgBox(
       '{#MyAppName} is currently running.'#13#10 +
@@ -207,7 +207,7 @@ const
   IfeoKey = 'SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\LeagueClientUx.exe';
 
 { Pengu hooks the client with an IFEO debugger: rundll32 "<dir>\core.dll", #6000.
-  If that core.dll is gone (Rose uninstalled or moved), Windows shows a RunDLL
+  If that core.dll is gone (403Changer uninstalled or moved), Windows shows a RunDLL
   "module not found" error on every League start, so remove the dead entry.
   A working Pengu install elsewhere keeps its key. }
 procedure _RemoveDeadPenguIfeo();
@@ -265,7 +265,7 @@ procedure CurStepChanged(CurStep: TSetupStep);
 begin
   if CurStep = ssPostInstall then
   begin
-    { Clean up a dead hook left by an older Rose uninstall }
+    { Clean up a dead hook left by an older 403Changer uninstall }
     _RemoveDeadPenguIfeo();
 
     // Create registry entries for Windows Apps list

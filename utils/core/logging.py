@@ -7,7 +7,6 @@ Logging configuration and utilities
 # Standard library imports
 import os
 import queue
-import re
 import sys
 import threading
 import time

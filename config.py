@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Global constants for Rose
+Global constants for 403Changer
 All arbitrary values are centralized here for easy tracking and modification
 """
 
 import io
+import os
 import shutil
 import sys
 import logging
-from typing import TYPE_CHECKING, Optional, Tuple
+from typing import Optional
 from pathlib import Path
 import configparser
 
@@ -33,7 +34,7 @@ GITHUB_REPO_NAME = "403Changer"
 GITHUB_REPO_URL = f"https://github.com/{GITHUB_REPO_OWNER}/{GITHUB_REPO_NAME}"
 GITHUB_RELEASE_API = f"https://api.github.com/repos/{GITHUB_REPO_OWNER}/{GITHUB_REPO_NAME}/releases/latest"
 
-_CONFIG = configparser.ConfigParser()
+_CONFIG = configparser.ConfigParser(interpolation=None)
 _CONFIG_MTIME: float = 0.0  # Last known modification time of config.ini
 
 
@@ -51,7 +52,7 @@ _CONFIG_ENCODING = "mbcs" if sys.platform == "win32" else "utf-8"
 
 
 def _decode_config(data: bytes) -> str:
-    """Decode config.ini, including lines older Rose versions wrote as UTF-8."""
+    """Decode config.ini, including lines older 403Changer versions wrote as UTF-8."""
     if data.startswith(b"\xff\xfe"):
         return data.decode("utf-16")
     if data.startswith(b"\xef\xbb\xbf"):
@@ -75,6 +76,11 @@ def read_config_file(config: configparser.ConfigParser, path: Path) -> None:
     config.read_string(_decode_config(data), source=str(path))
 
 
+def get_legacy_config_path() -> Path:
+    """Where core.dll (compiled binary) looks for config.ini: <LocalAppData>/Rose."""
+    return get_user_data_dir().parent / "Rose" / "config.ini"
+
+
 def write_config_file(config: configparser.ConfigParser, path: Path) -> None:
     """Write config.ini in the ANSI code page, atomically: League processes read
     it through core.dll at any time and must never see a half-written file."""
@@ -93,7 +99,9 @@ def write_config_file(config: configparser.ConfigParser, path: Path) -> None:
     # Mirror the config there so core.dll can resolve loaderpath and plugins
     try:
         if sys.platform == "win32":
-            local_appdata = os.environ.get("LOCALAPPDATA")
+            # Use the desktop user's LocalAppData (same root as the data dir), not the
+            # elevated account's, so core.dll finds the config for the logged-in user
+            local_appdata = str(get_user_data_dir().parent) or os.environ.get("LOCALAPPDATA")
             if local_appdata:
                 legacy_rose_dir = Path(local_appdata) / "Rose"
                 legacy_rose_dir.mkdir(parents=True, exist_ok=True)
@@ -157,7 +165,7 @@ def get_config_float(section: str, option: str, fallback: float) -> float:
 
 def set_config_option(section: str, option: str, value: str) -> None:
     config_path = get_config_file_path()
-    config = configparser.ConfigParser()
+    config = configparser.ConfigParser(interpolation=None)
     if config_path.exists():
         try:
             read_config_file(config, config_path)

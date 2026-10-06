@@ -9,10 +9,10 @@ import sys
 from typing import Optional, Tuple
 
 from lcu import LCU, LCUSkinScraper
-from state import SharedState, AppStatus
+from state import SharedState
 from injection import InjectionManager
 from injection.mods.storage import ModStorageService
-from utils.core.logging import get_logger, log_success
+from utils.core.logging import get_logger
 from utils.system.admin_utils import ensure_admin_rights
 from config import APP_VERSION, set_config_option
 

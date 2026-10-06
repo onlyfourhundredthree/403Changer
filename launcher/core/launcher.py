@@ -1,5 +1,5 @@
 """
-Native Win32 startup dialog used to prepare Rose before launching.
+Native Win32 startup dialog used to prepare 403Changer before launching.
 
 This replaces the former PyQt-based launcher with a lightweight Steam-style
 progress window that:
@@ -68,7 +68,7 @@ def _show_error(message: str) -> None:
         user32.MessageBoxW(
             None,
             message,
-            "Rose - Launcher",
+            "403Changer - Launcher",
             MB_OK | MB_ICONERROR | MB_TOPMOST,
         )
         updater_log.error(f"Error dialog shown to user: {message}")

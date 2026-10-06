@@ -8,7 +8,6 @@ Handles loading and finding skin IDs by name
 import json
 import logging
 from typing import Optional
-from pathlib import Path
 
 from utils.core.paths import get_user_data_dir
 

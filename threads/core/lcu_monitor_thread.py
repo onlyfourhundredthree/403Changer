@@ -80,7 +80,7 @@ class LCUMonitorThread(threading.Thread):
                     self.ws_connected = True
 
                     # A client that started without a loader (a standalone Pengu
-                    # disabled while Rose runs) gets Rose's. Only once the
+                    # disabled while 403Changer runs) gets 403Changer's. Only once the
                     # WebSocket is up: at lockfile time the client refuses the
                     # restart. The first connection is handled by startup.
                     if self._initial_ws_done and not self.state.stop:
@@ -103,13 +103,13 @@ class LCUMonitorThread(threading.Thread):
                     # Auto-enable 403Changer Party Mode
                     self._auto_enable_party_mode()
 
-                    # Refresh Rose's injection/UI state after a full LCU
+                    # Refresh 403Changer's injection/UI state after a full LCU
                     # disconnect/reconnect cycle (account swap), not on a simple
                     # WebSocket blip. Pengu stays active through this transition.
                     if self._initial_ws_done and self._lcu_reconnected and self.reconnect_callback:
                         self._lcu_reconnected = False
                         try:
-                            log.info("[LCU Monitor] Account swap detected - refreshing Rose state...")
+                            log.info("[LCU Monitor] Account swap detected - refreshing 403Changer state...")
                             self.reconnect_callback()
                         except Exception as e:
                             log.warning(f"[LCU Monitor] Reconnection callback failed: {e}")

@@ -37,9 +37,9 @@ RECONNECT_DELAYS = (1.0, 2.0, 5.0, 10.0, 20.0, 30.0)
 # pings never get through (a firewall...) otherwise reconnected every 100s all day
 STABLE_CONNECTION_S = 300.0
 # The relay closes a connection with this reason when the same player joins the
-# room again: another connection (a second Rose, another PC) now has our place
+# room again: another connection (a second 403Changer, another PC) now has our place
 REPLACED_REASON = "replaced"
-# The relay refuses a Rose too old for it with this status: no point retrying
+# The relay refuses a 403Changer too old for it with this status: no point retrying
 UPDATE_REQUIRED_STATUS = 426
 
 _ssl_contexts_cache: Optional[List[ssl.SSLContext]] = None
@@ -86,7 +86,7 @@ def _describe_error(error: Optional[BaseException]) -> str:
     if status == 409:
         return "this party is full (10 players max)"
     if status == UPDATE_REQUIRED_STATUS:
-        return "this version of Rose is too old for party mode, please update Rose"
+        return "this version of 403Changer is too old for party mode, please update 403Changer"
     if status:
         return f"the party server answered with HTTP {status}"
     if isinstance(error, asyncio.TimeoutError):
@@ -128,7 +128,7 @@ class PartyRelay:
         # Reconnecting stopped (see _run) until resume()
         self._stopped = False
         # The last connection attempt was refused because the room is full,
-        # or because the relay needs a newer Rose
+        # or because the relay needs a newer 403Changer
         self._room_full = False
         self._update_required = False
 
@@ -242,7 +242,7 @@ class PartyRelay:
             log.warning("[RELAY] No relay URL configured")
             return False
 
-        # The version tells the relay's logs which Rose a looping connection comes from
+        # The version tells the relay's logs which 403Changer a looping connection comes from
         url = f"{RELAY_URL}/room?key={self.room_key}&v={APP_VERSION}"
         self._room_full = False
         self._update_required = False
@@ -307,7 +307,7 @@ class PartyRelay:
                         self._stop("the room is full")
                         return
                     if self._update_required:
-                        self._stop("the party server needs a newer Rose")
+                        self._stop("the party server needs a newer 403Changer")
                         return
                     continue
 

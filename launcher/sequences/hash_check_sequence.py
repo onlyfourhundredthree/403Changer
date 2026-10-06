@@ -7,7 +7,6 @@ from __future__ import annotations
 
 import sys
 from pathlib import Path
-from typing import Callable
 
 from utils.download.hash_updater import update_hash_files
 from utils.core.logging import get_logger, get_named_logger

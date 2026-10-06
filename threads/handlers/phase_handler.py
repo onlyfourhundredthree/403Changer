@@ -5,7 +5,6 @@ Phase Handler
 Handles phase-specific logic and UI management
 """
 
-import logging
 from lcu import LCU
 from lcu.core.lockfile import SWIFTPLAY_QUEUE_IDS
 from state import SharedState
