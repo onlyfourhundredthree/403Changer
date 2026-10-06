@@ -128,6 +128,57 @@ def _sanitize_plugin_entrypoints(pengu_dir: Path) -> None:
         log.debug("Failed to sanitize plugin entrypoints: %s", exc)
 
 
+# The bundled plugins were called ROSE-* before the rename. The runtime directory
+# is overlaid rather than replaced, so that users keep their own plugins, which
+# means an old folder would survive an update and the client would load both
+# copies of every plugin. These are removed on sync, and only these: a ROSE-*
+# folder the user installed themselves is left alone.
+_RENAMED_PLUGINS = {
+    "ROSE-ChromaWheel": "403C-ChromaWheel",
+    "ROSE-CustomSkinSelector": "403C-CustomSkinSelector",
+    "ROSE-CustomWheel": "403C-CustomWheel",
+    "ROSE-FormsWheel": "403C-FormsWheel",
+    "ROSE-HistoricMode": "403C-HistoricMode",
+    "ROSE-I18n": "403C-I18n",
+    "ROSE-Jade": "403C-Jade",
+    "ROSE-PartyMode": "403C-PartyMode",
+    "ROSE-RandomSkin": "403C-RandomSkin",
+    "ROSE-SettingsPanel": "403C-SettingsPanel",
+    "ROSE-SkinMonitor": "403C-SkinMonitor",
+    "ROSE-UI": "403C-UI",
+}
+
+
+def _migrate_renamed_plugins(pengu_dir: Path) -> tuple[set[str], set[str]]:
+    """Drop the pre-rename plugin folders, carrying their on/off state forward.
+
+    Returns (enabled, disabled) under the new names, to fold into the snapshot
+    taken before the overlay so a plugin the user had switched off stays off.
+    """
+    enabled: set[str] = set()
+    disabled: set[str] = set()
+    plugins_dir = pengu_dir / "plugins"
+    if not plugins_dir.is_dir():
+        return enabled, disabled
+
+    for old_name, new_name in _RENAMED_PLUGINS.items():
+        old_dir = plugins_dir / old_name
+        if not old_dir.is_dir():
+            continue
+        if (old_dir / _PLUGIN_ENTRYPOINT_DISABLED).exists():
+            disabled.add(new_name)
+        elif (old_dir / _PLUGIN_ENTRYPOINT).exists():
+            enabled.add(new_name)
+        try:
+            shutil.rmtree(old_dir)
+            log.info("Removed the pre-rename plugin folder %s", old_dir.name)
+        except OSError as exc:
+            # Leaving it means the client loads it twice, so say so loudly
+            log.warning("Could not remove the old plugin folder %s: %s", old_dir, exc)
+
+    return enabled, disabled
+
+
 def _snapshot_plugin_enable_state(pengu_dir: Path) -> tuple[set[str], set[str]]:
     """
     Snapshot the user's enabled/disabled state for plugins before overlay sync.
@@ -274,8 +325,14 @@ def _resolve_pengu_dir() -> Path:
         # Deleting the runtime directory on each launch wipes those user-installed plugins.
         runtime_dir.mkdir(parents=True, exist_ok=True)
 
+        # Clear the pre-rename plugin folders first, so the client cannot load both
+        # copies, and keep whatever the user had switched off switched off.
+        carried_enabled, carried_disabled = _migrate_renamed_plugins(runtime_dir)
+
         # Snapshot plugin enabled/disabled state BEFORE overlaying bundled files.
         enabled_plugins, disabled_plugins = _snapshot_plugin_enable_state(runtime_dir)
+        enabled_plugins |= carried_enabled
+        disabled_plugins |= carried_disabled
 
         # Copy bundled Pengu Loader to runtime location (overwrites bundled files, preserves extras).
         #
@@ -768,8 +825,8 @@ def _external_pengu_with_rose_plugins() -> Optional[Path]:
         return None
     external = core.parent
     if ((external / 'Pengu Loader.exe').is_file()
-            and (external / 'plugins' / 'ROSE-SkinMonitor' / 'index.js').is_file()
-            and (external / 'plugins' / 'ROSE-UI' / 'index.js').is_file()):
+            and (external / 'plugins' / '403C-SkinMonitor' / 'index.js').is_file()
+            and (external / 'plugins' / '403C-UI' / 'index.js').is_file()):
         return external
     return None
 

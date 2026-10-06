@@ -17,7 +17,7 @@ class ChromaPanelManager:
 
     NOTE: The legacy PyQt6 visual chroma panel has been removed.
     This manager now only tracks chroma state for the JavaScript plugins
-    (ROSE-ChromaWheel, ROSE-RandomSkin, ROSE-HistoricMode, etc.) and no longer
+    (403C-ChromaWheel, 403C-RandomSkin, 403C-HistoricMode, etc.) and no longer
     creates or shows any Qt widgets.
     """
     
