@@ -67,13 +67,19 @@
         if (fixedSource !== source) {
           badge.setAttribute("src", fixedSource);
         }
+      }
+    });
+
     // Replace hardcoded "Rose" titles/headers in Pengu's welcome popup
-    const headings = shadowRoot.querySelectorAll("h3, h2, h1, span, p");
+    const headings = shadowRoot.querySelectorAll("h3, h2, h1, span, p, a");
     headings.forEach((h) => {
       if (h.childNodes && h.childNodes.length === 1 && h.childNodes[0].nodeType === Node.TEXT_NODE) {
         if (h.textContent.trim() === "Rose") {
           h.textContent = "403Changer";
         }
+      }
+      if (h.href && h.href.includes("Alban1911/Rose")) {
+        h.href = "https://github.com/onlyfourhundredthree/403Changer";
       }
     });
   }

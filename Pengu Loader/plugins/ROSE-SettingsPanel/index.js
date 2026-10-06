@@ -2960,20 +2960,6 @@
     const linksSection = document.createElement("div");
     linksSection.className = "settings-links";
 
-    const discordLink = document.createElement("a");
-    discordLink.className = "settings-link";
-    discordLink.href = DISCORD_INVITE_URL;
-    discordLink.target = "_blank";
-    discordLink.textContent = "Discord";
-    linksSection.appendChild(discordLink);
-
-    const kofiLink = document.createElement("a");
-    kofiLink.className = "settings-link";
-    kofiLink.href = KOFI_URL;
-    kofiLink.target = "_blank";
-    kofiLink.textContent = "Ko-Fi";
-    linksSection.appendChild(kofiLink);
-
     const githubLink = document.createElement("a");
     githubLink.className = "settings-link";
     githubLink.href = GITHUB_URL;

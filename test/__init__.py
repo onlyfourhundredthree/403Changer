@@ -1,1 +1,0 @@
-"""Rose test package."""
