@@ -164,7 +164,7 @@ class ModStorageService:
 
     def _ensure_mods_root_layout(self) -> None:
         """
-        Ensure `%LOCALAPPDATA%\\Rose\\mods` contains only the expected root category folders.
+        Ensure the data directory\'s `mods` folder holds only the expected root categories.
 
         - Creates missing category folders.
         - Removes *extra* root-level folders not in our category list.

@@ -6,7 +6,7 @@ Issue Reporter
 Writes a small, human-friendly diagnostics file that summarizes important
 errors and "non-error failure reasons" (e.g., timeouts, settings mismatches).
 
-File: %LOCALAPPDATA%\\Rose\\rose_diagnostics.txt
+File: rose_diagnostics.txt in the 403Changer data directory
 """
 
 from __future__ import annotations

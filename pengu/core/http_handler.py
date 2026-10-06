@@ -133,7 +133,7 @@ class HTTPHandler:
             elif path_clean.startswith("/asset/"):
                 return self._handle_asset_request(path_clean, cors_headers)
 
-            # Handle mod asset requests (for files under %LOCALAPPDATA%\\Rose\\mods)
+            # Handle mod asset requests (files under the 403Changer data dir\'s mods folder)
             elif path_clean.startswith("/mod-asset/"):
                 return self._handle_mod_asset_request(path_clean, cors_headers)
 

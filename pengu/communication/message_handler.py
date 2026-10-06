@@ -2543,7 +2543,7 @@ class MessageHandler:
             log.debug(f"[SkinMonitor] Traceback: {traceback.format_exc()}")
 
     def _handle_request_category_mods(self, payload: dict) -> None:
-        """Return the list of mods for a specific top-level category under %LOCALAPPDATA%\\Rose\\mods."""
+        """Return the list of mods for a specific top-level category under the 403Changer data directory\'s mods folder."""
         if not self.mod_storage:
             return
 

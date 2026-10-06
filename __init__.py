@@ -1,2 +1,2 @@
-# Rose - Modular Skin Injector
+# 403Changer - Modular Skin Injector
 # Main package initialization
