@@ -724,41 +724,33 @@
       <lol-uikit-dialog-frame class="party-dialog" orientation="bottom" close-button>
       <div class="party-modal">
       <div class="party-header">
-        <h3>${t("Party Mode")}</h3>
-        <span class="party-status offline">${t("Offline")}</span>
+        <h3>403Changer - Party Mode</h3>
+        <span class="party-status online">${t("Always-On")}</span>
       </div>
       <div class="party-content">
-        <div class="party-description">${t("Share your skins with friends in the same game. Send your token to your friends or paste theirs: everyone linked to the party sees each other.")}</div>
+        <div class="party-description" style="color:#0acbe6;font-weight:bold;">
+          ${t("Aynı lobide 403Changer kullanan oyuncular otomatik olarak eşleşir. Kod girmenize gerek yoktur.")}
+        </div>
 
-        <div class="party-section" id="party-toggle-section">
-          <button class="party-toggle-btn enable" id="party-toggle-btn">
-            ${t("Enable Party Mode")}
-          </button>
+        <div class="party-section" id="party-peers-section">
+          <div class="party-section-title">${t("Lobideki Bağlı Oyuncular")} (<span id="peer-count">0</span>)</div>
+          <div class="peers-list" id="peers-list">
+            <div class="no-peers">${t("Lobide bağlı 403Changer kullanıcısı bekleniyor...")}</div>
+          </div>
+        </div>
+
+        <div class="party-section" id="party-toggle-section" style="display: none;">
+          <button class="party-toggle-btn enable" id="party-toggle-btn" style="display: none;"></button>
           <div id="party-toggle-message"></div>
         </div>
-
         <div class="party-section" id="party-token-section" style="display: none;">
-          <div class="party-section-title">${t("Your Party Token")}</div>
-          <div class="token-container">
-            <input type="text" class="token-input" id="party-token-display" readonly placeholder="${t("Generating...")}">
-            <button class="copy-btn" id="copy-token-btn">${t("Copy")}</button>
-          </div>
+          <input type="text" id="party-token-display" style="display: none;">
+          <button id="copy-token-btn" style="display: none;"></button>
         </div>
-
         <div class="party-section" id="party-add-section" style="display: none;">
-          <div class="party-section-title">${t("Add Friend")}</div>
-          <div class="add-peer-container">
-            <input type="text" class="add-peer-input" id="add-peer-input" placeholder="${t("Paste your friend's token here...")}">
-            <button class="add-btn" id="add-peer-btn">${t("Add")}</button>
-          </div>
+          <input type="text" id="add-peer-input" style="display: none;">
+          <button id="add-peer-btn" style="display: none;"></button>
           <div id="add-peer-message"></div>
-        </div>
-
-        <div class="party-section" id="party-peers-section" style="display: none;">
-          <div class="party-section-title">${t("Connected Friends")} (<span id="peer-count">0</span>)</div>
-          <div class="peers-list" id="peers-list">
-            <div class="no-peers">${t("No friends connected yet")}</div>
-          </div>
         </div>
       </div>
       </div>

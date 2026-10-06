@@ -67,15 +67,13 @@
         if (fixedSource !== source) {
           badge.setAttribute("src", fixedSource);
         }
-        return;
-      }
-
-      if (source.includes("/github/stars/")) {
-        badge.setAttribute("src", ROSE_GITHUB_BADGE_FALLBACK_URL);
-        getRoseGithubStars().then((stars) => {
-          if (stars === null || !badge.isConnected) return;
-          badge.setAttribute("src", getRoseGithubBadgeUrl(stars));
-        });
+    // Replace hardcoded "Rose" titles/headers in Pengu's welcome popup
+    const headings = shadowRoot.querySelectorAll("h3, h2, h1, span, p");
+    headings.forEach((h) => {
+      if (h.childNodes && h.childNodes.length === 1 && h.childNodes[0].nodeType === Node.TEXT_NODE) {
+        if (h.textContent.trim() === "Rose") {
+          h.textContent = "403Changer";
+        }
       }
     });
   }
