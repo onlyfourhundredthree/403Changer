@@ -551,42 +551,6 @@
       background-color: #4ade80;
     }
 
-    /* 403Changer Party Member Badge on Lobby Profile Cards */
-    .changer-party-badge {
-      position: absolute;
-      top: 6px;
-      right: 6px;
-      z-index: 100;
-      background: linear-gradient(135deg, #0acbe6, #005a82);
-      border: 1px solid #c8aa6e;
-      border-radius: 10px;
-      padding: 2px 7px;
-      color: #ffffff;
-      font-family: var(--font-display), "Beaufort for LOL", Arial, sans-serif;
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 0.05em;
-      box-shadow: 0 0 8px rgba(10, 203, 230, 0.7);
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      cursor: default;
-      pointer-events: auto;
-      animation: changerPulse 2s infinite ease-in-out;
-    }
-
-    .changer-party-badge .dot {
-      width: 6px;
-      height: 6px;
-      background-color: #4ade80;
-      border-radius: 50%;
-      box-shadow: 0 0 4px #4ade80;
-    }
-
-    @keyframes changerPulse {
-      0%, 100% { box-shadow: 0 0 6px rgba(10, 203, 230, 0.6); }
-      50% { box-shadow: 0 0 12px rgba(10, 203, 230, 1); }
-    }
     `;
   }
 
@@ -693,15 +657,14 @@
   function updateLobbyButtonState() {
     if (!lobbyButton) return;
 
+    const inLobbyOrChamp = isInLobby() || isInChampSelect();
     const connectedPeers = (partyState.peers || []).filter((p) => p.connected);
-    if (partyState.enabled) {
+    
+    // As per user request: blue (active) when lobby is open, normal color otherwise.
+    if (inLobbyOrChamp || connectedPeers.length > 0) {
       lobbyButton.classList.add("active");
     } else {
       lobbyButton.classList.remove("active");
-    }
-    if (partyState.enabled && connectedPeers.length > 0) {
-      lobbyButton.classList.add("connected");
-    } else {
       lobbyButton.classList.remove("connected");
     }
   }
@@ -1203,11 +1166,14 @@
       if (inChampSelect && currentUIMode !== "champselect") {
         console.log(`${LOG_PREFIX} Entered champion select`);
         currentUIMode = "champselect";
+        updateLobbyButtonState();
       } else if (inLobby && currentUIMode !== "lobby") {
         console.log(`${LOG_PREFIX} Entered lobby`);
         currentUIMode = "lobby";
+        updateLobbyButtonState();
       } else if (!inChampSelect && !inLobby && currentUIMode !== "default") {
         currentUIMode = "default";
+        updateLobbyButtonState();
       }
 
       // Update 403Changer connected badges on lobby members
@@ -1216,62 +1182,7 @@
   }
 
   function updateLobbyMemberBadges() {
-    // If not in lobby or no party state, clean up badges
-    if (!isInLobby() && !isInChampSelect()) {
-      document.querySelectorAll(".changer-party-badge").forEach((el) => el.remove());
-      return;
-    }
-
-    const connectedPeers = (partyState.peers || []).filter((p) => p.connected);
-    const peerNames = new Set(connectedPeers.map((p) => (p.summoner_name || "").toLowerCase()));
-    
-    // Also include ourselves if party is active
-    if (partyState.enabled && partyState.connection === "online" && partyState.my_summoner_name) {
-      peerNames.add(partyState.my_summoner_name.toLowerCase());
-    }
-
-    // Target lobby player banners, cards, and regalia slots
-    const playerContainers = document.querySelectorAll(
-      ".v2-banner-component, .lobby-player, .party-member-slot, lol-regalia-parties-v2-element, .champion-select-team-member"
-    );
-
-    playerContainers.forEach((container) => {
-      // Find summoner name in this container
-      const nameEl = container.querySelector(
-        ".banner-summoner-name, .summoner-name, .name, lol-uikit-content-block"
-      );
-      const text = nameEl ? (nameEl.textContent || "").trim().toLowerCase() : "";
-
-      let isConnectedMember = false;
-      if (text) {
-        for (const pName of peerNames) {
-          if (pName && (text.includes(pName) || pName.includes(text))) {
-            isConnectedMember = true;
-            break;
-          }
-        }
-      }
-
-      // Check if local player container
-      if (container.classList.contains("local-player") && partyState.enabled && partyState.connection === "online") {
-        isConnectedMember = true;
-      }
-
-      let existingBadge = container.querySelector(".changer-party-badge");
-
-      if (isConnectedMember) {
-        if (!existingBadge) {
-          container.style.position = container.style.position || "relative";
-          const badge = document.createElement("div");
-          badge.className = "changer-party-badge";
-          badge.innerHTML = `<span class="dot"></span> 403`;
-          badge.title = "403Changer: Party Bağlı";
-          container.appendChild(badge);
-        }
-      } else if (existingBadge) {
-        existingBadge.remove();
-      }
-    });
+    // Feature disabled by user request. The lobby button handles connection status.
   }
 
   function stopGamePhaseMonitor() {
