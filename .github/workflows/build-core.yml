@@ -65,6 +65,17 @@ jobs:
             Write-Host "::error title=build.log ($i)::$msg"
           }
 
+      - name: Verify core.dll
+        shell: pwsh
+        run: |
+          python scripts/verify_core_dll.py 2>&1 | Tee-Object -FilePath verify.log
+          $code = $LASTEXITCODE
+          $msg = ((Get-Content verify.log) -join "`n")
+          $msg = $msg -replace '%', '%25' -replace "`r", '%0D' -replace "`n", '%0A'
+          $level = if ($code -eq 0) { 'notice' } else { 'error' }
+          Write-Host "::${level} title=verify core.dll::$msg"
+          exit $code
+
       - name: Upload the build log
         if: always()
         uses: actions/upload-artifact@v4
