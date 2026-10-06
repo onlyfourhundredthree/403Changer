@@ -3,6 +3,8 @@
   "private": true,
   "version": "1.1.6",
   "type": "module",
+  "_comment_packageManager": "pnpm-lock.yaml is lockfileVersion 9; pnpm 10+ fails the install over esbuild's ignored build script",
+  "packageManager": "pnpm@9.15.9",
   "scripts": {
     "dev": "vite",
     "build-dev": "tsc && vite build -m development",
