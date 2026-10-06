@@ -11,7 +11,7 @@ import shutil
 from pathlib import Path
 from typing import Callable, List, Optional
 
-from utils.core.logging import get_logger, log_action, log_success
+from utils.core.logging import get_logger
 from utils.core.paths import get_classic_skins_dir, get_skins_dir, get_injection_dir
 from utils.core.issue_reporter import report_issue
 from utils.core.junction import safe_remove_entry
@@ -253,7 +253,7 @@ class SkinInjector:
                 "warning",
                 "Injection failed.",
                 details={"total_s": f"{total_duration:.2f}", "mkoverlay_s": f"{mkoverlay_duration:.2f}", "skin": skin_name},
-                hint="Check Rose logs for details, then retry.",
+                hint="Check 403Changer logs for details, then retry.",
             )
         
         return result == 0

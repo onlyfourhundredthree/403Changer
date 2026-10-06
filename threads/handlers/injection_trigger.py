@@ -5,9 +5,9 @@ Injection Trigger
 Handles triggering skin injection based on countdown timer
 """
 
-import logging
 import threading
 import time
+from pathlib import Path
 from typing import Optional
 
 from config import BASE_SKIN_VERIFICATION_WAIT_S, LOG_SEPARATOR_WIDTH
@@ -276,7 +276,6 @@ class InjectionTrigger:
             historic_custom_mod_path = None
             if not selected_custom_mod:
                 try:
-                    from pathlib import Path
                     from utils.core.historic import (
                         get_historic_skin_for_champion,
                         get_historic_target_for_champion,
@@ -335,7 +334,6 @@ class InjectionTrigger:
 
             if not selected_custom_mod and historic_custom_mod_path:
                 try:
-                    from pathlib import Path
                     from injection.mods.storage import ModStorageService
                     mod_storage = ModStorageService()
 
@@ -658,7 +656,7 @@ class InjectionTrigger:
                     or self.state.hovered_champ_id
                 )
                 # Keep an owned target as the real client-selected skin. The
-                # downloaded Rose carrier is only needed for unowned skins;
+                # downloaded 403Changer carrier is only needed for unowned skins;
                 # using it for an owned skin can move the overlay onto the
                 # carrier's skin0 paths and prevent a mod targeting the actual
                 # owned skin (for example Spirit Blossom Sett) from applying.
@@ -1220,7 +1218,6 @@ class InjectionTrigger:
         Note: custom_mod can have mod_folder_name=None if only map/font/announcer mods are selected
         """
         try:
-            from pathlib import Path
             
             if not self.injection_manager:
                 log.error("[INJECT] Cannot inject custom mod - injection manager not available")

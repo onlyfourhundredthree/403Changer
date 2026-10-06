@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Main entry point for Rose (delegates to main package)
+Main entry point for 403Changer (delegates to main package)
 """
 
 import sys
@@ -19,4 +19,4 @@ if not getattr(sys, 'frozen', False):
 from main import main
 
 if __name__ == "__main__":
-        main()
+    main()

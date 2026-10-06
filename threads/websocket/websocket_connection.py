@@ -6,13 +6,11 @@ Handles WebSocket connection lifecycle and callbacks
 """
 
 import base64
-import json
 import logging
 import os
 import random
 import ssl
 import threading
-import time
 from typing import Optional, Callable
 
 import websocket  # websocket-client
@@ -142,7 +140,6 @@ class WebSocketConnection:
 
     def _on_open(self, ws):
         """WebSocket connection opened"""
-        from utils.core.logging import log_status
         
         separator = "=" * 80
         log.info(separator)

@@ -19,7 +19,7 @@ from utils.core.safe_extract import MOD_ARCHIVE_SUFFIXES
 
 log = get_logger()
 
-# Rose metadata stored next to mods, never part of a mod
+# 403Changer metadata stored next to mods, never part of a mod
 _METADATA_FILES = {"rose_mod_targets.json"}
 
 # path -> ((mtime_ns, size), content_hash, legacy_hash)
@@ -77,7 +77,7 @@ def _archive_content_hash(archive_path: Path) -> Optional[str]:
 
 
 def _legacy_archive_hash(archive_path: Path) -> str:
-    """Whole-file hash sent by older Rose versions for archive mods."""
+    """Whole-file hash sent by older 403Changer versions for archive mods."""
     with archive_path.open("rb") as stream:
         return _hash_stream(stream).hex()[:16]
 

@@ -10,7 +10,6 @@ Manages ChromaUI and UnownedFrame as separate components
 import threading
 
 # Local imports
-from ui.chroma.ui import ChromaUI
 from utils.core.logging import get_logger
 
 from ui.handlers.historic_mode_handler import HistoricModeHandler
@@ -44,23 +43,18 @@ class UserInterface:
     # Legacy methods - no-op for compatibility
     def create_click_catchers(self):
         """Legacy method - no-op for compatibility."""
-        pass
     
     def _try_show_click_blocker(self):
         """Legacy method - no-op for compatibility."""
-        pass
     
     def _show_click_blocker_on_main_thread(self):
         """Legacy method - no-op for compatibility."""
-        pass
     
     def _hide_click_blocker_with_delay(self):
         """Legacy method - no-op for compatibility."""
-        pass
     
     def create_click_catchers_for_finalization(self):
         """Legacy method - no-op for compatibility."""
-        pass
     
     def show_skin(self, skin_id: int, skin_name: str, champion_name: str = None, champion_id: int = None):
         """Show UI for a specific skin - manages both ChromaUI and UnownedFrame"""
@@ -92,7 +86,6 @@ class UserInterface:
             # Show skin using display handler
             # Ensure display handler has chroma_ui reference
             if not self.skin_display_handler and self.lifecycle_manager.chroma_ui:
-                from ui.handlers.skin_display_handler import SkinDisplayHandler
                 self.skin_display_handler = SkinDisplayHandler(
                     self.state, self.skin_scraper, self.lifecycle_manager.chroma_ui
                 )
@@ -188,7 +181,6 @@ class UserInterface:
         initialized = self.lifecycle_manager.process_pending_operations()
         # Update skin display handler reference after initialization
         if initialized and self.lifecycle_manager.chroma_ui and not self.skin_display_handler:
-            from ui.handlers.skin_display_handler import SkinDisplayHandler
             self.skin_display_handler = SkinDisplayHandler(
                 self.state, self.skin_scraper, self.lifecycle_manager.chroma_ui
             )
@@ -248,63 +240,48 @@ class UserInterface:
     # Legacy methods - no-op for compatibility
     def _show_unowned_frame(self, skin_id: int, skin_name: str, champion_name: str = None, is_same_base_chroma: bool = False):
         """Legacy method - no-op for compatibility."""
-        pass
     
     def _hide_unowned_frame(self):
         """Legacy method - no-op for compatibility."""
-        pass
     
     def _on_click_catcher_hide_clicked(self):
         """Legacy method - no-op for compatibility."""
-        pass
     
     def _on_click_catcher_clicked(self, instance_name: str):
         """Legacy method - no-op for compatibility."""
-        pass
     
     def _create_show_instances_for_panel(self, panel_name: str):
         """Legacy method - no-op for compatibility."""
-        pass
     
     def _destroy_all_show_instances(self):
         """Legacy method - no-op for compatibility."""
-        pass
     
     def _hide_all_ui_elements(self):
         """Legacy method - no-op for compatibility."""
-        pass
     
     def _show_all_ui_elements(self):
         """Legacy method - no-op for compatibility."""
-        pass
     
     def show_click_catcher_hide(self, x, y, width=50, height=50):
         """Legacy method - no-op for compatibility."""
-        pass
     
     def hide_click_catcher_hide(self):
         """Legacy method - no-op for compatibility."""
-        pass
     
     def show_click_catcher(self, instance_name: str):
         """Legacy method - no-op for compatibility."""
-        pass
     
     def hide_click_catcher(self, instance_name: str):
         """Legacy method - no-op for compatibility."""
-        pass
     
     def show_all_click_catchers(self):
         """Legacy method - no-op for compatibility."""
-        pass
     
     def hide_all_click_catchers(self):
         """Legacy method - no-op for compatibility."""
-        pass
     
     def _show_click_catchers(self):
         """Legacy method - no-op for compatibility."""
-        pass
     
     def cleanup(self):
         """Clean up all UI components"""

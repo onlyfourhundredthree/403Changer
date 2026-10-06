@@ -3,7 +3,7 @@
 """
 Create the update package the launcher downloads from a GitHub release
 
-Zips dist/Rose (Rose.exe and _internal/ at the root of the archive, as the
+Zips dist/403Changer (403Changer.exe and _internal/ at the root of the archive, as the
 updater extracts it) into installer/update_package_<version>.zip. Run it on
 the signed build, next to the installer.
 """

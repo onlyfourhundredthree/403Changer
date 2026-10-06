@@ -21,7 +21,7 @@ class HTTPHandler:
 
     Security Note:
         - Browser requests with an Origin header are only allowed from loopback origins.
-        - File-serving routes resolve paths under explicit Rose-owned directories.
+        - File-serving routes resolve paths under explicit 403Changer-owned directories.
     """
 
     def __init__(self, port: int, shared_state=None):
@@ -115,7 +115,7 @@ class HTTPHandler:
                     str(self.port).encode('utf-8')
                 )
             
-            # The language of Rose's menus and its texts (ROSE-I18n)
+            # The language of 403Changer's menus and its texts (ROSE-I18n)
             if path_clean == "/i18n":
                 import json
                 from utils.core.i18n import i18n_payload

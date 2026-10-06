@@ -4,7 +4,7 @@
 Rift Classic (game mode JADE)
 
 Classic games spawn separate Jade_<Champion> characters, so regular skin mods
-(<champion>/skins/skin0.bin) are never loaded there. Rose injects the Classic
+(<champion>/skins/skin0.bin) are never loaded there. 403Changer injects the Classic
 skins stored in LeagueSkins' classic/ folder instead (%LOCALAPPDATA%/Rose/classic),
 which target Jade_<Champion>'s default skin.
 

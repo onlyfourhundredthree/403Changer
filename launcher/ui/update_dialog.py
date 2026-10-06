@@ -78,7 +78,7 @@ class UpdateDialog(Win32Window):
 
         detail_hwnd = self.create_control(
             "STATIC",
-            "Preparing Rose…",
+            "Preparing 403Changer…",
             WS_CHILD | WS_VISIBLE,
             0,
             x_pos,

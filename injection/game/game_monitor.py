@@ -7,7 +7,7 @@ Handles game process monitoring, suspension, and resumption
 
 import threading
 import time
-from typing import Callable, Optional
+from typing import Callable
 
 # Import psutil with fallback for development environments
 try:
@@ -30,8 +30,7 @@ from config import (
     PERSISTENT_MONITOR_CHECK_INTERVAL_S,
     PERSISTENT_MONITOR_IDLE_INTERVAL_S,
     GAME_RESUME_MAX_ATTEMPTS,
-    GAME_RESUME_VERIFICATION_WAIT_S,
-    get_config_float
+    GAME_RESUME_VERIFICATION_WAIT_S
 )
 from utils.core.logging import get_logger, log_section, log_event, log_success
 from utils.core.issue_reporter import report_issue
@@ -136,7 +135,7 @@ class GameMonitor:
                                         break
                                     except AccessDenied:
                                         log.error("[monitor] ACCESS DENIED - Cannot suspend game")
-                                        log.error("[monitor] Try running Rose as Administrator")
+                                        log.error("[monitor] Try running 403Changer as Administrator")
                                         self._monitor_active = False
                                         break
                                     except Exception as e:
@@ -235,7 +234,7 @@ class GameMonitor:
                                     break
                                 except AccessDenied:
                                     log.error("[monitor] ACCESS DENIED - Cannot suspend game")
-                                    log.error("[monitor] Try running Rose as Administrator")
+                                    log.error("[monitor] Try running 403Changer as Administrator")
                                     self._monitor_active = False
                                     # Clear reference if we couldn't suspend (game is running anyway)
                                     self._suspended_game_process = None

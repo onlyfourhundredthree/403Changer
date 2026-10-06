@@ -7,7 +7,7 @@ Shows chroma wheel immediately when skin is detected (not during injection)
 
 # Standard library imports
 import threading
-from typing import TYPE_CHECKING, Optional
+from typing import Optional
 
 # Local imports
 from ui.chroma.panel import get_chroma_panel

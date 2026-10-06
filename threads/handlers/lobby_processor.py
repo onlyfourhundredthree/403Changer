@@ -5,7 +5,6 @@ Lobby Processor
 Processes lobby state and detects Swiftplay mode
 """
 
-import logging
 import time
 from lcu import LCU
 from lcu.core.lockfile import SWIFTPLAY_MODES, SWIFTPLAY_QUEUE_IDS

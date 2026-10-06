@@ -5,9 +5,8 @@ Party UI Bridge
 WebSocket communication bridge for party mode UI
 """
 
-import asyncio
 import json
-from typing import Callable, Optional
+from typing import Optional
 
 from utils.core.logging import get_logger
 

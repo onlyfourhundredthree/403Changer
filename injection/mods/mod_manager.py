@@ -7,12 +7,10 @@ Handles mod extraction, installation, and management
 
 import shutil
 from pathlib import Path
-from typing import List
 
 from utils.core.logging import get_logger, log_success
-from utils.core.paths import get_user_data_dir
 from utils.core.safe_extract import safe_extractall
-from utils.core.junction import is_junction, safe_remove_entry
+from utils.core.junction import safe_remove_entry
 
 log = get_logger()
 

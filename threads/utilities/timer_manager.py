@@ -5,7 +5,6 @@ Timer Manager
 Manages loadout countdown timer lifecycle
 """
 
-import logging
 import time
 from typing import Optional
 

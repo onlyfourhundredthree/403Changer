@@ -5,7 +5,6 @@ Game Mode Detector
 Detects game mode and map information from LCU
 """
 
-import logging
 import traceback
 from injection.classic import is_classic_game_mode
 from lcu import LCU

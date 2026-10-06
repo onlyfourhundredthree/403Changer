@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-System tray manager for Rose
+System tray manager for 403Changer
 """
 
 import threading
@@ -23,7 +23,7 @@ log = get_logger()
 
 
 class TrayManager:
-    """Manages the system tray icon for Rose"""
+    """Manages the system tray icon for 403Changer"""
     
     def __init__(self, quit_callback: Optional[Callable] = None, restart_callback: Optional[Callable] = None):
         """
@@ -49,7 +49,7 @@ class TrayManager:
         image = Image.new('RGBA', (width, height), (0, 0, 0, 0))
         draw = ImageDraw.Draw(image)
         
-        # Draw a simple "SC" logo (Rose)
+        # Draw a simple "SC" logo (403Changer)
         # Background circle (scaled 2x)
         draw.ellipse(TRAY_ICON_ELLIPSE_COORDS, fill=(0, 100, 200, 255), outline=(0, 50, 100, 255), width=TRAY_ICON_BORDER_WIDTH)
         

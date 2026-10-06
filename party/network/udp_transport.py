@@ -7,8 +7,7 @@ Handles UDP socket operations with NAT hole punching
 
 import asyncio
 import socket
-import time
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Callable, Dict, Optional, Tuple
 
 from utils.core.logging import get_logger

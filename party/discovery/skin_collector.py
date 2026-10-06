@@ -5,7 +5,7 @@ Skin Collector
 Collects and manages skin selections from party members
 """
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Dict, List, Optional, Set
 
 from state import SharedState
