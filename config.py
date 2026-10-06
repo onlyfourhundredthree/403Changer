@@ -23,7 +23,7 @@ log = logging.getLogger(__name__)
 # =============================================================================
 
 APP_NAME = "403Changer"
-APP_VERSION = "1.0.0"                           # Application version
+APP_VERSION = "1.4.6"                           # Application version
 APP_USER_AGENT = f"{APP_NAME}/{APP_VERSION}"  # User-Agent header for HTTP requests
 GAME_EXECUTABLE_NAMES = ("League of Legends.exe", "League of Legends (TM) Client.exe")
 
@@ -88,6 +88,19 @@ def write_config_file(config: configparser.ConfigParser, path: Path) -> None:
     except PermissionError:
         # Still locked (core.dll, an antivirus): write in place rather than lose the change
         path.write_bytes(data)
+
+    # core.dll (compiled binary hook) looks for %LOCALAPPDATA%\Rose\config.ini
+    # Mirror the config there so core.dll can resolve loaderpath and plugins
+    try:
+        if sys.platform == "win32":
+            local_appdata = os.environ.get("LOCALAPPDATA")
+            if local_appdata:
+                legacy_rose_dir = Path(local_appdata) / "Rose"
+                legacy_rose_dir.mkdir(parents=True, exist_ok=True)
+                legacy_config = legacy_rose_dir / "config.ini"
+                legacy_config.write_bytes(data)
+    except Exception:
+        pass
 
 
 def _reload_config() -> None:

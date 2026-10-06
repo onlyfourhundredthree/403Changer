@@ -2,8 +2,8 @@
 ; This creates a proper Windows installer that registers the app
 
 #define MyAppName "403Changer"
-#define MyAppVersion "1.0.0"
-#define MyAppVersionInfo "1.0.0.0"
+#define MyAppVersion "1.4.6"
+#define MyAppVersionInfo "1.4.6.0"
 #define MyAppPublisher "403"
 #define MyAppURL "https://github.com/onlyfourhundredthree/403Changer"
 #define MyAppExeName "403Changer.exe"

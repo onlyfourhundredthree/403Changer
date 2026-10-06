@@ -46,8 +46,8 @@ class UpdateDialog(Win32Window):
 
     def __init__(self) -> None:
         super().__init__(
-            class_name="RoseUpdateDialog",
-            window_title=f"Rose {APP_VERSION}",
+            class_name="ChangerUpdateDialog",
+            window_title=f"403Changer {APP_VERSION}",
             width=420,
             height=120,
             style=WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX,
@@ -313,7 +313,7 @@ class UpdateDialog(Win32Window):
     def _render_status_text(self) -> None:
         if not self.detail_hwnd or not self.status_hwnd:
             return
-        header = self._status_text or self._current_status or "Preparing Rose…"
+        header = self._status_text or self._current_status or "Preparing 403Changer…"
         user32.SetWindowTextW(self.detail_hwnd, header)
         user32.InvalidateRect(self.detail_hwnd, None, True)
         user32.SetWindowTextW(self.status_hwnd, self._transfer_text or "")

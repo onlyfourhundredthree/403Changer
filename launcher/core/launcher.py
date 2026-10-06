@@ -93,14 +93,14 @@ def _with_ui_updates(dialog: UpdateDialog) -> tuple[Callable[[str], None], Calla
 
 
 def _confirm_update(dialog: UpdateDialog, remote_version: str, local_version: str) -> bool:
-    """Ask whether the user wants to download an available Rose update."""
+    """Ask whether the user wants to download an available 403Changer update."""
     dialog.set_marquee(False)
     dialog.set_detail("Update available")
-    dialog.set_status(f"Rose {remote_version} is ready to install.")
+    dialog.set_status(f"403Changer {remote_version} is ready to install.")
     dialog.pump_messages()
 
     message = (
-        f"A new version of Rose is available.\n\n"
+        f"A new version of 403Changer is available.\n\n"
         f"Current version: {local_version}\n"
         f"New version: {remote_version}\n\n"
         "Do you want to download and install it now?"
@@ -108,7 +108,7 @@ def _confirm_update(dialog: UpdateDialog, remote_version: str, local_version: st
     result = user32.MessageBoxW(
         dialog.hwnd or None,
         message,
-        "Rose update available",
+        "403Changer update available",
         MB_YESNO | MB_ICONINFORMATION | MB_DEFBUTTON2 | MB_TOPMOST,
     )
     accepted = result == IDYES
@@ -120,7 +120,7 @@ def _confirm_update(dialog: UpdateDialog, remote_version: str, local_version: st
     )
 
     if accepted:
-        dialog.set_detail("Updating Rose...")
+        dialog.set_detail("Updating 403Changer...")
         dialog.set_status("Downloading update...")
     else:
         dialog.set_detail("Update skipped")
@@ -223,7 +223,7 @@ def _run_launcher_dialog(dev_mode: bool, test_download_fail: bool) -> None:
                 skin_sequence.perform_skin_sync(dialog, test_fail=test_download_fail)
 
                 dialog.set_detail("All checks complete.")
-                dialog.set_status("Launching Rose…")
+                dialog.set_status("Launching 403Changer…")
                 dialog.set_progress(100)
                 dialog.pump_messages()
                 time.sleep(0.4)
@@ -234,7 +234,7 @@ def _run_launcher_dialog(dev_mode: bool, test_download_fail: bool) -> None:
             except Exception as exc:  # noqa: BLE001
                 result["error"] = exc
                 log.error(f"Launcher error: {exc}", exc_info=True)
-                _show_error(f"Failed to prepare Rose:\n\n{exc}")
+                _show_error(f"Failed to prepare 403Changer:\n\n{exc}")
                 updater_log.exception("Launcher sequence crashed", exc_info=True)
             finally:
                 dialog.allow_close()
