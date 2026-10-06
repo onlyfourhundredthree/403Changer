@@ -23,7 +23,7 @@ log = logging.getLogger(__name__)
 # =============================================================================
 
 APP_NAME = "403Changer"
-APP_VERSION = "1.4.6"                           # Application version
+APP_VERSION = "2.0.0"                           # Application version
 APP_USER_AGENT = f"{APP_NAME}/{APP_VERSION}"  # User-Agent header for HTTP requests
 GAME_EXECUTABLE_NAMES = ("League of Legends.exe", "League of Legends (TM) Client.exe")
 
