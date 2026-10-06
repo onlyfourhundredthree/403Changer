@@ -15,7 +15,7 @@
   const DISCORD_INVITE_URL = "https://discord.com/invite/roseskins";
   const ROSE_DISCORD_GUILD_ID = "1490473857075642621";
   const ROSE_GITHUB_REPO_API_URL =
-    "https://api.github.com/repos/Alban1911/Rose";
+    "https://api.github.com/repos/onlyfourhundredthree/403Changer";
   const ROSE_GITHUB_BADGE_FALLBACK_URL =
     "https://img.shields.io/badge/GitHub-Stars-32A832?style=flat&logo=github&logoColor=white";
   let roseGithubStarsPromise = null;

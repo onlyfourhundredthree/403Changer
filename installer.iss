@@ -1,20 +1,20 @@
-; Rose Installer Script for Inno Setup
+; 403Changer Installer Script for Inno Setup
 ; This creates a proper Windows installer that registers the app
 
-#define MyAppName "Rose"
-#define MyAppVersion "1.4.6"
-#define MyAppVersionInfo "1.4.6.0"
-#define MyAppPublisher "Rose Team"
-#define MyAppURL "https://github.com/Alban1911/Rose"
-#define MyAppExeName "Rose.exe"
+#define MyAppName "403Changer"
+#define MyAppVersion "1.0.0"
+#define MyAppVersionInfo "1.0.0.0"
+#define MyAppPublisher "403"
+#define MyAppURL "https://github.com/onlyfourhundredthree/403Changer"
+#define MyAppExeName "403Changer.exe"
 #define MyAppDescription "Effortless skin changer for League of Legends"
 ; Must match config.SINGLE_INSTANCE_MUTEX_NAME (used by the app to enforce single-instance)
-#define MyAppMutex "Local\RoseSingleInstance"
+#define MyAppMutex "Local\403ChangerSingleInstance"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
 ; Do not use the same AppId value in installers for other applications.
-AppId={{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}}
+AppId={{E403C3D4-E5F6-7890-ABCD-403403403403}}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 AppVerName={#MyAppName} {#MyAppVersion}
@@ -26,7 +26,7 @@ DefaultDirName={autopf}\{#MyAppName}
 DefaultGroupName={#MyAppName}
 AllowNoIcons=yes
 OutputDir=installer
-OutputBaseFilename=Rose_Setup_{#MyAppVersion}
+OutputBaseFilename=403Changer_Setup_{#MyAppVersion}
 SetupIconFile=assets\icon.ico
 Compression=lzma
 SolidCompression=yes
@@ -53,7 +53,7 @@ Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescrip
 [Files]
 ; Main application files
 ; hashes.game.txt is user-managed and must be preserved across installations.
-Source: "dist\Rose\*"; DestDir: "{app}"; Excludes: "injection\tools\hashes.game.txt"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "dist\403Changer\*"; DestDir: "{app}"; Excludes: "injection\tools\hashes.game.txt"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
@@ -68,16 +68,16 @@ Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChang
 [UninstallRun]
 ; Uninstall Pengu Loader (removes its IFEO activation and disables the native hook)
 Filename: "{app}\_internal\Pengu Loader\Pengu Loader.exe"; Parameters: "--uninstall --silent"; Flags: runhidden waituntilterminated skipifdoesntexist
-; Always remove the Rose auto-start scheduled task (created via schtasks /TN "Rose")
-Filename: "{sys}\schtasks.exe"; Parameters: "/Delete /TN Rose /F"; Flags: runhidden
+; Always remove the 403Changer auto-start scheduled task (created via schtasks /TN "403Changer")
+Filename: "{sys}\schtasks.exe"; Parameters: "/Delete /TN 403Changer /F"; Flags: runhidden
 
 [UninstallDelete]
 Type: filesandordirs; Name: "{app}\_internal"
 Type: filesandordirs; Name: "{app}\injection\overlay"
 Type: filesandordirs; Name: "{app}\injection\mods"
 ; Remove user data stored in AppData
-; Rose stores user data in %LOCALAPPDATA%\Rose
-Type: filesandordirs; Name: "{localappdata}\Rose"
+; 403Changer stores user data in %LOCALAPPDATA%\403Changer
+Type: filesandordirs; Name: "{localappdata}\403Changer"
 ; Note: State files are now stored in user data directory, not in app directory
 
 [Code]
@@ -237,10 +237,10 @@ begin
     RegDeleteKeyIncludingSubkeys(HKLM, IfeoKey);
 end;
 
-procedure _DeleteLocalAppDataRose();
+procedure _DeleteLocalAppData403Changer();
 begin
   { Ensure user data is removed before running external cleanup }
-  DelTree(ExpandConstant('{localappdata}\Rose'), True, True, True);
+  DelTree(ExpandConstant('{localappdata}\403Changer'), True, True, True);
 end;
 
 procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
@@ -252,8 +252,8 @@ begin
 
   if CurUninstallStep = usPostUninstall then
   begin
-    _DeleteLocalAppDataRose();
-    { Remove the entire install directory (Program Files\Rose) in case
+    _DeleteLocalAppData403Changer();
+    { Remove the entire install directory (Program Files\403Changer) in case
       runtime-generated files (logs, caches, etc.) were left behind. }
     DelTree(ExpandConstant('{app}'), True, True, True);
     { Safety net if Pengu's own --uninstall could not run }

@@ -100,6 +100,9 @@ class LCUMonitorThread(threading.Thread):
                     # Check initial champion select state (for issue #29: app starting after lock)
                     self._check_initial_champion_state()
 
+                    # Auto-enable 403Changer Party Mode
+                    self._auto_enable_party_mode()
+
                     # Refresh Rose's injection/UI state after a full LCU
                     # disconnect/reconnect cycle (account swap), not on a simple
                     # WebSocket blip. Pengu stays active through this transition.
@@ -247,6 +250,26 @@ class LCUMonitorThread(threading.Thread):
                     )
         except Exception as e:
             log.debug(f"Error checking initial champion state: {e}")
+
+    def _auto_enable_party_mode(self):
+        """Automatically enable Party Mode in the background so players in the same lobby connect effortlessly."""
+        try:
+            party_manager = getattr(self.state, "party_manager", None)
+            if not party_manager:
+                from party.core.party_manager import PartyManager
+                party_manager = PartyManager(self.lcu, self.state, self.injection_manager)
+                self.state.party_manager = party_manager
+
+            if not party_manager.enabled:
+                import asyncio
+                threading.Thread(
+                    target=lambda: asyncio.run(party_manager.enable()),
+                    name="AutoPartyEnable",
+                    daemon=True,
+                ).start()
+                log.info("[PARTY] Auto-enabled party mode on LCU connection")
+        except Exception as e:
+            log.warning(f"[PARTY] Failed to auto-enable party mode: {e}")
 
     def _maybe_recover_locked_champ_select_state(self) -> None:
         """Retry late-lock recovery while a locked Champ Select session is active."""

@@ -7,15 +7,10 @@ interface Env {
 // Rose before this version could keep a room awake all day (reconnecting every
 // 100s when its pings never got through): it is refused here, before waking the
 // room, and Rose 1.4.2+ stops retrying on this status. Older Rose sends no version
-const MIN_VERSION = [1, 4, 4];
+const MIN_VERSION = [1, 0, 0];
 
 function supported(version: string | null): boolean {
-  if (!version) return false;
-  const parts = version.split('.').map((part) => parseInt(part, 10));
-  for (let i = 0; i < MIN_VERSION.length; i++) {
-    const part = Number.isFinite(parts[i]) ? parts[i] : 0;
-    if (part !== MIN_VERSION[i]) return part > MIN_VERSION[i];
-  }
+  if (!version) return true; // allow our 403Changer clients
   return true;
 }
 
@@ -25,7 +20,7 @@ export default {
 
     // Health check
     if (url.pathname === '/' && request.method === 'GET') {
-      return new Response(JSON.stringify({ status: 'ok', service: 'rose-party-relay' }), {
+      return new Response(JSON.stringify({ status: 'ok', service: '403party-relay' }), {
         headers: { 'Content-Type': 'application/json' },
       });
     }
@@ -38,7 +33,7 @@ export default {
         return new Response('Invalid room key', { status: 400 });
       }
       if (!supported(url.searchParams.get('v'))) {
-        return new Response('Update Rose to use party mode', { status: 426 });
+        return new Response('Update 403Changer to use party mode', { status: 426 });
       }
 
       const id = env.ROOM.idFromName(roomKey);

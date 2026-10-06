@@ -9,11 +9,10 @@ from typing import Optional
 
 import requests
 
+from config import GITHUB_RELEASE_API
 from utils.core.logging import get_logger
 
 log = get_logger()
-
-GITHUB_RELEASE_API = "https://api.github.com/repos/Alban1911/Rose/releases/latest"
 
 
 class GitHubClient:

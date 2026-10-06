@@ -8,10 +8,10 @@ namespace PenguLoader
 {
     public static class Program
     {
-        public static string Name => "Rose Loader";
-        public static string HomepageUrl => "https://ko-fi.com/roseapp";
-        public static string DiscordUrl => "https://discord.gg/roseskins";
-        public static string GithubRepo => "Alban1911/Rose";
+        public static string Name => "403Changer Loader";
+        public static string HomepageUrl => "https://github.com/onlyfourhundredthree/403Changer";
+        public static string DiscordUrl => "";
+        public static string GithubRepo => "onlyfourhundredthree/403Changer";
         public static string GithubUrl => $"https://github.com/{GithubRepo}";
         public static string GithubIssuesUrl => $"https://github.com/{GithubRepo}/issues";
         public const string VERSION = "2.0.0";

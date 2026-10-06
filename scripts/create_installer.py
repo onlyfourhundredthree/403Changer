@@ -43,7 +43,7 @@ def create_installer():
     """Create Windows installer using Inno Setup"""
     
     print("=" * 60)
-    print("Creating Rose Windows Installer")
+    print("Creating 403Changer Windows Installer")
     print("=" * 60)
     
     # Check if Inno Setup is installed
@@ -71,8 +71,8 @@ def create_installer():
     print(f"Found Inno Setup: {iscc_path}")
     
     # Check if dist directory exists
-    if not (ROOT / "dist/Rose").exists():
-        print("\nError: dist/Rose directory not found!")
+    if not (ROOT / "dist/403Changer").exists():
+        print("\nError: dist/403Changer directory not found!")
         print("Please run 'python scripts/build_pyinstaller.py' first to create the executable.")
         return False
     
@@ -115,7 +115,7 @@ def create_installer():
         return False
     
     # Copy icon file to dist directory if it doesn't exist
-    icon_dst = ROOT / "dist/Rose/icon.ico"
+    icon_dst = ROOT / "dist/403Changer/icon.ico"
     if ico_icon.exists() and not icon_dst.exists():
         shutil.copy2(ico_icon, icon_dst)
         print(f"Copied {ico_icon} to {icon_dst}")
@@ -137,8 +137,8 @@ def create_installer():
     print("\n[3/3] Installer created successfully!")
     
     # Check if installer was created
-    # Named Rose_Setup_<version>.exe: the one just compiled is the newest
-    installer_files = sorted(installer_dir.glob("Rose_Setup*.exe"), key=lambda p: p.stat().st_mtime)
+    # Named 403Changer_Setup_<version>.exe: the one just compiled is the newest
+    installer_files = sorted(installer_dir.glob("403Changer_Setup*.exe"), key=lambda p: p.stat().st_mtime)
     if installer_files:
         installer_file = installer_files[-1]
         size_mb = installer_file.stat().st_size / (1024 * 1024)

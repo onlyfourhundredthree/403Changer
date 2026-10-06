@@ -98,6 +98,7 @@ class PartyManager:
 
         # Background tasks
         self._running = False
+        self._current_auto_room: Optional[str] = None
         self._lobby_check_task: Optional[asyncio.Task] = None
         self._skin_broadcast_task: Optional[asyncio.Task] = None
 
@@ -213,7 +214,7 @@ class PartyManager:
             token = PartyToken.decode(token_str)
         except ValueError as e:
             log.info(f"[PARTY] Invalid token: {e}")
-            return False, "That's not a valid party token. Copy the whole token (it starts with ROSE:)."
+            return False, "That's not a valid party token. Copy the whole token (it starts with 403:)."
 
         if token.summoner_id == self.party_state.my_summoner_id:
             return False, "That's your own token - send it to your friends instead"
@@ -495,18 +496,39 @@ class PartyManager:
     # ─── Background tasks ────────────────────────────────────────────────
 
     async def _lobby_check_loop(self):
-        """Check lobby membership and update peer status."""
+        """Check lobby membership, auto-join lobby rooms, and update peer status."""
         while self._running:
             try:
                 await asyncio.sleep(LOBBY_CHECK_INTERVAL)
                 if not self._running or not self._lobby_matcher:
                     continue
 
+                # Auto-discover room key for the current lobby / champ select
+                auto_room = await asyncio.to_thread(self._lobby_matcher.get_auto_room_key)
+                if auto_room and auto_room != self._current_auto_room:
+                    # Switched to a new lobby or team
+                    log.info(f"[PARTY] Detected lobby/team. Auto-joining shared room {auto_room[:8]}...")
+                    if self._current_auto_room and self._current_auto_room in self._relays and self._current_auto_room != self._home_room:
+                        old_relay = self._relays.pop(self._current_auto_room, None)
+                        if old_relay:
+                            await old_relay.close()
+                    self._current_auto_room = auto_room
+                    await self._join_room(auto_room)
+                    await self._publish_state()
+                elif not auto_room and self._current_auto_room:
+                    # Left the lobby
+                    if self._current_auto_room in self._relays and self._current_auto_room != self._home_room:
+                        old_relay = self._relays.pop(self._current_auto_room, None)
+                        if old_relay:
+                            await old_relay.close()
+                    self._current_auto_room = None
+                    self._refresh_peers()
+
                 # LCU requests block: keep them off the event loop
                 lobby_ids = await asyncio.to_thread(self._lobby_matcher.get_all_summoner_ids)
                 changed = False
                 for sid, peer in list(self.party_state.peers.items()):
-                    in_lobby = sid in lobby_ids
+                    in_lobby = sid in lobby_ids or (auto_room is not None)
                     if peer.in_lobby != in_lobby:
                         self.party_state.update_peer_lobby_status(sid, in_lobby)
                         changed = True

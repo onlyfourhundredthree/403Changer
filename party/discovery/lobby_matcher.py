@@ -146,6 +146,40 @@ class LobbyMatcher:
 
         return "Unknown"
 
+    def get_lobby_id(self) -> Optional[str]:
+        """Get the unique lobby/party identifier from LCU if available."""
+        try:
+            lobby_data = self.lcu.get("/lol-lobby/v2/lobby")
+            if lobby_data and isinstance(lobby_data, dict):
+                party_id = lobby_data.get("partyId") or lobby_data.get("partyArn")
+                if party_id:
+                    return str(party_id)
+        except Exception:
+            pass
+        return None
+
+    def get_auto_room_key(self) -> Optional[str]:
+        """Derive a deterministic room key for players in the same lobby or team.
+
+        If a partyId is present, we hash it.
+        Otherwise, if 2 or more players are in the lobby/team, we sort their
+        summoner IDs and hash them.
+        """
+        import hashlib
+
+        # 1. Try explicit partyId
+        party_id = self.get_lobby_id()
+        if party_id:
+            return hashlib.sha256(f"lobby:{party_id}".encode()).hexdigest()[:32]
+
+        # 2. Try member IDs (sorted so all members generate the exact same room key)
+        summoner_ids = sorted(self.get_all_summoner_ids())
+        if len(summoner_ids) >= 2:
+            ids_str = ",".join(str(sid) for sid in summoner_ids)
+            return hashlib.sha256(f"members:{ids_str}".encode()).hexdigest()[:32]
+
+        return None
+
     def match_peers_to_lobby(
         self, peers: List[PeerConnection]
     ) -> Dict[int, PeerConnection]:

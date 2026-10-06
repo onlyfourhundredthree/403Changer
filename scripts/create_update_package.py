@@ -14,7 +14,7 @@ import zipfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-DIST = ROOT / "dist" / "Rose"
+DIST = ROOT / "dist" / "403Changer"
 OUTPUT_DIR = ROOT / "installer"
 # Downloaded by the launcher from the release on its own (see update_sequence),
 # and left out of the installer too
@@ -42,15 +42,15 @@ def packaged_files():
     for path in sorted(DIST.rglob("*")):
         if not path.is_file() or path.name.lower() in EXCLUDED_NAMES:
             continue
-        # A package left in dist/Rose by hand isn't part of the build
+        # A package left in dist/403Changer by hand isn't part of the build
         if path.parent == DIST and path.suffix.lower() == ".zip":
             continue
         yield path
 
 
 def create_update_package() -> Path:
-    if not (DIST / "Rose.exe").is_file():
-        raise SystemExit(f"{DIST / 'Rose.exe'} not found: build Rose first")
+    if not (DIST / "403Changer.exe").is_file():
+        raise SystemExit(f"{DIST / '403Changer.exe'} not found: build 403Changer first")
 
     version = app_version()
     OUTPUT_DIR.mkdir(exist_ok=True)

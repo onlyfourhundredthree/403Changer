@@ -22,9 +22,16 @@ log = logging.getLogger(__name__)
 # APPLICATION METADATA
 # =============================================================================
 
-APP_VERSION = "1.4.6"                           # Application version
-APP_USER_AGENT = f"Rose/{APP_VERSION}"  # User-Agent header for HTTP requests
+APP_NAME = "403Changer"
+APP_VERSION = "1.0.0"                           # Application version
+APP_USER_AGENT = f"{APP_NAME}/{APP_VERSION}"  # User-Agent header for HTTP requests
 GAME_EXECUTABLE_NAMES = ("League of Legends.exe", "League of Legends (TM) Client.exe")
+
+# GitHub Repository & Updates
+GITHUB_REPO_OWNER = "onlyfourhundredthree"
+GITHUB_REPO_NAME = "403Changer"
+GITHUB_REPO_URL = f"https://github.com/{GITHUB_REPO_OWNER}/{GITHUB_REPO_NAME}"
+GITHUB_RELEASE_API = f"https://api.github.com/repos/{GITHUB_REPO_OWNER}/{GITHUB_REPO_NAME}/releases/latest"
 
 _CONFIG = configparser.ConfigParser()
 _CONFIG_MTIME: float = 0.0  # Last known modification time of config.ini
@@ -344,16 +351,16 @@ WINDOWS_DPI_AWARENESS_SYSTEM = 1         # PROCESS_SYSTEM_DPI_AWARE
 # =============================================================================
 
 # Lock file name
-LOCK_FILE_NAME = "rose.lock"
+LOCK_FILE_NAME = "403changer.lock"
 
 # NEW: Windows named mutex for single-instance (per-user/session)
 _IS_DEV_BUILD = bool(getattr(sys, "frozen", False)) and (
-    "rosedev" in Path(sys.executable).stem.lower() or "rose-dev" in Path(sys.executable).stem.lower()
+    "403dev" in Path(sys.executable).stem.lower() or "403-dev" in Path(sys.executable).stem.lower()
 )
-SINGLE_INSTANCE_MUTEX_NAME = r"Local\RoseDevSingleInstance" if _IS_DEV_BUILD else r"Local\RoseSingleInstance"
+SINGLE_INSTANCE_MUTEX_NAME = r"Local\403ChangerDevSingleInstance" if _IS_DEV_BUILD else r"Local\403ChangerSingleInstance"
 
 # Log file patterns (handles .log files)
-LOG_FILE_PATTERN = "rose_*.log*"
+LOG_FILE_PATTERN = "403changer_*.log*"
 UPDATER_LOG_FILE_PATTERN = "log_updater_*.log*"
 LOG_TIMESTAMP_FORMAT = "%d-%m-%Y_%H-%M-%S"  # European format, Windows-compatible
 
@@ -374,15 +381,6 @@ INTERESTING_PHASES = {
     "EndOfGame"
 }
 
-
-# =============================================================================
-# ANALYTICS CONSTANTS
-# =============================================================================
-
-ANALYTICS_SERVER_URL = 'https://analytics.rosekeys.site/'  # Analytics server endpoint
-ANALYTICS_PING_INTERVAL_S = 900  # Seconds between presence heartbeats (15 minutes)
-ANALYTICS_ENABLED = True  # Enable/disable analytics tracking
-ANALYTICS_TIMEOUT_S = 5  # Request timeout in seconds
 
 # =============================================================================
 # DEFAULT ARGUMENTS

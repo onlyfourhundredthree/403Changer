@@ -18,7 +18,7 @@ from utils.core.logging import get_logger
 log = get_logger()
 
 # Token prefix for identification
-TOKEN_PREFIX = "ROSE:"
+TOKEN_PREFIX = "403:"
 # Token version (v2 = WebSocket relay, no IP/port needed)
 TOKEN_VERSION = 2
 # Rose 1.3.1 and older reject tokens older than this, so tokens are
@@ -53,7 +53,7 @@ class PartyToken:
         Total: 45 bytes before compression
 
         Returns:
-            String like "ROSE:abc123..." suitable for sharing
+            String like "403:abc123..." suitable for sharing
         """
         try:
             data = struct.pack(
@@ -81,7 +81,7 @@ class PartyToken:
         Supports both v1 (legacy P2P with IP/port) and v2 (relay-only) tokens.
 
         Args:
-            token_str: Token string (with or without ROSE: prefix)
+            token_str: Token string (with 403: or ROSE: prefix)
 
         Returns:
             PartyToken instance
@@ -90,8 +90,10 @@ class PartyToken:
             ValueError: If token is invalid
         """
         try:
-            if token_str.startswith(TOKEN_PREFIX):
-                token_str = token_str[len(TOKEN_PREFIX):]
+            if token_str.startswith("403:"):
+                token_str = token_str[4:]
+            elif token_str.startswith("ROSE:"):
+                token_str = token_str[5:]
 
             padding = 4 - (len(token_str) % 4)
             if padding != 4:

@@ -47,29 +47,29 @@ def _dll_dialog_text(reason: str, detail: str = ""):
     source = "Get both files from LTK Manager."
     if reason == "expired":
         return (
-            "Rose - Patcher Outdated",
+            "403Changer - Patcher Outdated",
             "The LTK patcher has reached its end of life",
-            f"The ltk_patcher_dll.dll in Rose's tools folder does not support game builds released after {detail}, and League has updated since.",
+            f"The ltk_patcher_dll.dll in 403Changer's tools folder does not support game builds released after {detail}, and League has updated since.",
             f"1. Update LTK Manager, then get both files from it.\n"
-            "2. Open Rose's tools folder.\n"
-            "3. Replace both files, then restart Rose.",
+            "2. Open 403Changer's tools folder.\n"
+            "3. Replace both files, then restart 403Changer.",
         )
     if reason == "invalid":
         return (
-            "Rose - Broken Patcher",
-            "One Rose component needs replacing",
-            "The ltk_patcher_dll.dll in Rose's tools folder is not a recognized LTK patcher DLL.",
+            "403Changer - Broken Patcher",
+            "One 403Changer component needs replacing",
+            "The ltk_patcher_dll.dll in 403Changer's tools folder is not a recognized LTK patcher DLL.",
             f"1. {source}\n"
-            "2. Open Rose's tools folder.\n"
-            "3. Replace both files, then restart Rose.",
+            "2. Open 403Changer's tools folder.\n"
+            "3. Replace both files, then restart 403Changer.",
         )
     return (
-        "Rose - Missing Patcher",
-        "One Rose component is missing",
-        f"Rose needs {detail or 'the LTK patcher'} in its tools folder before it can start.",
+        "403Changer - Missing Patcher",
+        "One 403Changer component is missing",
+        f"403Changer needs {detail or 'the LTK patcher'} in its tools folder before it can start.",
         f"1. {source}\n"
-        "2. Open Rose's tools folder.\n"
-        "3. Place both files there, then restart Rose.",
+        "2. Open 403Changer's tools folder.\n"
+        "3. Place both files there, then restart 403Changer.",
     )
 
 
@@ -125,12 +125,12 @@ def _show_native_dll_dialog(tools_dir, reason="missing", detail=""):
     button_close = 1002
     buttons = (TaskDialogButton * 2)(
         TaskDialogButton(button_open, "Open tools folder"),
-        TaskDialogButton(button_close, "Close Rose"),
+        TaskDialogButton(button_close, "Close 403Changer"),
     )
     content = (
         f"{status_body}\n\nHow to fix it:\n{steps}"
     )
-    footer = "Please do not request or share this file in Discord. Rose cannot distribute it because of licensing restrictions."
+    footer = "Please do not request or share this file in Discord. 403Changer cannot distribute it because of licensing restrictions."
     assets_dirs = []
     if hasattr(sys, "_MEIPASS"):
         assets_dirs.append(Path(sys._MEIPASS) / "assets")
@@ -273,7 +273,7 @@ def _show_dll_dialog(tools_dir, reason="missing", detail="") -> bool:
         f"{status_title}\n\n{status_body}\n\nHow to fix it:\n{steps}\n\n"
         "Please do not request or share this file in Discord.\n"
         "Discord: https://discord.gg/roseskins\n\n"
-        "Press OK to open the tools folder, or Cancel to close Rose."
+        "Press OK to open the tools folder, or Cancel to close 403Changer."
     )
     response = ctypes.windll.user32.MessageBoxW(
         0, message, title, 0x00000001 | 0x00000030 | 0x00040000
@@ -435,18 +435,18 @@ def _update_registry_version() -> None:
         return
     try:
         import winreg
-        key_path = r"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Rose"
+        key_path = r"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\403Changer"
         with winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, key_path, 0, winreg.KEY_SET_VALUE) as key:
             winreg.SetValueEx(key, "DisplayVersion", 0, winreg.REG_SZ, APP_VERSION)
     except Exception:
         pass
 
 def _schedule_restart() -> bool:
-    """Spawn a detached helper that relaunches Rose after this process exits.
+    """Spawn a detached helper that relaunches 403Changer after this process exits.
 
     The new instance cannot start while the current one is still alive because
     of the single-instance mutex, so a small batch file waits for this PID to
-    exit and then starts Rose again.
+    exit and then starts 403Changer again.
     """
     import os
     import subprocess
@@ -464,7 +464,7 @@ def _schedule_restart() -> bool:
             workdir = Path(__file__).parent.parent
             launch_cmd = f'start "" /D "{workdir}" "{exe_path}" "main.py"'
 
-        batch_path = Path(tempfile.gettempdir()) / f"rose_restart_{pid}.bat"
+        batch_path = Path(tempfile.gettempdir()) / f"403changer_restart_{pid}.bat"
 
         batch_content = (
             "@echo off\n"
@@ -581,10 +581,10 @@ def run_league_unlock(args: Optional[argparse.Namespace] = None,
         tray_manager.quit_callback = updated_tray_quit_callback
 
         def updated_tray_restart_callback():
-            """Callback for tray restart - relaunch Rose after this process exits"""
+            """Callback for tray restart - relaunch 403Changer after this process exits"""
             log.info("Restart requested from tray - scheduling relaunch")
             if not _schedule_restart():
-                log.warning("Restart scheduling failed; Rose will quit without relaunching")
+                log.warning("Restart scheduling failed; 403Changer will quit without relaunching")
             state.stop = True
             log.info("Stop flag set - main loop should exit before relaunch")
 
@@ -674,16 +674,16 @@ if __name__ == "__main__":
             report_issue(
                 "FATAL_CRASH",
                 "error",
-                "Rose crashed unexpectedly.",
+                "403Changer crashed unexpectedly.",
                 details={"type": type(e).__name__, "error": str(e)},
-                hint="Check %LOCALAPPDATA%\\Rose\\logs\\ for details.",
+                hint="Check %LOCALAPPDATA%\\403Changer\\logs\\ for details.",
             )
         except Exception:
             pass
         
         error_msg = f"""
 ================================================================================
-FATAL ERROR - Rose Crashed
+FATAL ERROR - 403Changer Crashed
 ================================================================================
 Error: {e}
 Type: {type(e).__name__}
@@ -693,7 +693,7 @@ Traceback:
 ================================================================================
 
 This error has been logged. Please report this issue with the log file.
-Log location: Check %LOCALAPPDATA%\\Rose\\logs\\
+Log location: Check %LOCALAPPDATA%\\403Changer\\logs\\
 ================================================================================
 """
         
@@ -711,8 +711,8 @@ Log location: Check %LOCALAPPDATA%\\Rose\\logs\\
             try:
                 ctypes.windll.user32.MessageBoxW(
                     0,
-                    f"Rose crashed with an unhandled error:\n\n{str(e)}\n\nError type: {type(e).__name__}\n\nPlease check the log file in:\n%LOCALAPPDATA%\\Rose\\logs\\",
-                    "Rose - Fatal Error",
+                    f"403Changer crashed with an unhandled error:\n\n{str(e)}\n\nError type: {type(e).__name__}\n\nPlease check the log file in:\n%LOCALAPPDATA%\\403Changer\\logs\\",
+                    "403Changer - Fatal Error",
                     0x50010  # MB_OK | MB_ICONERROR | MB_SETFOREGROUND | MB_TOPMOST
                 )
             except Exception:

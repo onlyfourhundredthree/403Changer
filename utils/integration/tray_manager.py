@@ -189,7 +189,7 @@ class TrayManager:
 
                 show_message_box_threaded(
                     f"Failed to open settings dialog:\n\n{e}",
-                    "Rose Settings",
+                    "403Changer Settings",
                     0x10,  # MB_ICONERROR
                 )
             except Exception:
@@ -229,7 +229,7 @@ class TrayManager:
     def _create_menu(self) -> pystray.Menu:
         """Create the context menu for the tray icon"""
         return pystray.Menu(
-            pystray.MenuItem(f"Rose v{APP_VERSION}", None, enabled=False),
+            pystray.MenuItem(f"403Changer v{APP_VERSION}", None, enabled=False),
             pystray.Menu.SEPARATOR,
             pystray.MenuItem("Open Mods Folder", self._on_open_mods),
             pystray.Menu.SEPARATOR,
@@ -246,9 +246,9 @@ class TrayManager:
             menu = self._create_menu()
             
             self.icon = pystray.Icon(
-                "Rose",
+                "403Changer",
                 icon_image,
-                "Rose",
+                "403Changer",
                 menu,
                 default_action=self._on_icon_click
             )
