@@ -5,6 +5,15 @@ on:
     tags:
       - 'v*'
   workflow_dispatch:
+    inputs:
+      release:
+        description: 'Publish a GitHub Release (otherwise the installer is only an artifact)'
+        type: boolean
+        default: false
+      tag_suffix:
+        description: 'Tag suffix, e.g. rc1 -> v2.0.3-rc1 (prerelease). Empty publishes a final release.'
+        type: string
+        default: 'rc1'
 
 env:
   # corepack otherwise stops to ask before downloading pnpm, which hangs CI
@@ -27,6 +36,34 @@ jobs:
         with:
           python-version: '3.11'
           cache: 'pip'
+
+      # A release usually comes from pushing a tag, but the tag can also be made
+      # from here: this works out the tag the build should carry, and the release
+      # step creates it at this commit. That keeps releasing to one click (or one
+      # `gh workflow run`) for anyone who cannot push tags.
+      - name: Work out the release tag
+        id: tag
+        shell: bash
+        env:
+          EVENT: ${{ github.event_name }}
+          REF_NAME: ${{ github.ref_name }}
+          TAG_SUFFIX: ${{ inputs.tag_suffix }}
+        run: |
+          set -euo pipefail
+          if [ "$EVENT" = "push" ]; then
+            tag="$REF_NAME"
+          else
+            version=$(python -c "import re,pathlib;print(re.search(r'^APP_VERSION\s*=\s*\"([^\"]+)\"',pathlib.Path('config.py').read_text(encoding='utf-8'),re.M).group(1))")
+            suffix="${TAG_SUFFIX:-}"
+            tag="v${version}${suffix:+-${suffix}}"
+          fi
+          # A suffixed tag (v2.0.3-rc1) publishes as a prerelease. The app's updater
+          # asks GitHub for /releases/latest, which skips prereleases, so a test build
+          # can be installed by hand without being pushed to everyone.
+          if [[ "$tag" == *-* ]]; then prerelease=true; else prerelease=false; fi
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          echo "prerelease=$prerelease" >> "$GITHUB_OUTPUT"
+          echo "Release tag: $tag (prerelease: $prerelease)"
 
       - name: Install Inno Setup
         run: choco install innosetup -y
@@ -77,15 +114,14 @@ jobs:
           path: installer/*.exe
 
       - name: Create GitHub Release
-        if: startsWith(github.ref, 'refs/tags/')
+        if: startsWith(github.ref, 'refs/tags/') || inputs.release
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ steps.tag.outputs.tag }}
+          target_commitish: ${{ github.sha }}
           files: |
             installer/*.exe
             installer/*.zip
           draft: false
-          # A tag with a suffix (v2.0.3-rc1) publishes as a prerelease. The app's
-          # updater asks GitHub for /releases/latest, which skips prereleases, so a
-          # test build can be downloaded by hand without being pushed to everyone.
-          prerelease: ${{ contains(github.ref_name, '-') }}
+          prerelease: ${{ steps.tag.outputs.prerelease }}
           generate_release_notes: true
