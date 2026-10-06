@@ -1,8 +1,8 @@
 name: Build 403Changer Loader core
 
 # Builds native/pengu into core.dll on a Windows runner (MSVC + Node preinstalled)
-# and uploads it as an artifact. It never touches "Pengu Loader/core.dll" in the
-# repo: download the artifact and swap it in once it has been tested.
+# and uploads it as an artifact. It never touches "Pengu Loader/core.dll": download
+# the artifact and swap it in once it has been tested against a live client.
 
 on:
   workflow_dispatch:
@@ -11,6 +11,10 @@ on:
       - 'native/pengu/**'
       - 'scripts/build_pengu_core.py'
       - '.github/workflows/build-core.yml'
+
+env:
+  # corepack otherwise stops to ask before downloading pnpm, which hangs CI
+  COREPACK_ENABLE_DOWNLOAD_PROMPT: '0'
 
 jobs:
   core:
@@ -37,7 +41,37 @@ jobs:
         uses: microsoft/setup-msbuild@v2
 
       - name: Build core.dll
-        run: python scripts/build_pengu_core.py
+        shell: pwsh
+        run: |
+          python scripts/build_pengu_core.py 2>&1 | Tee-Object -FilePath build.log
+          exit $LASTEXITCODE
+
+      # The raw run log is served from a storage host some networks cannot reach,
+      # so the tail of the build is repeated here as check annotations, which the
+      # API returns as plain JSON.
+      - name: Surface the build log
+        if: failure()
+        shell: pwsh
+        run: |
+          if (-not (Test-Path build.log)) {
+            Write-Host "::error::build.log was never written"
+            exit 0
+          }
+          $lines = @(Get-Content build.log -Tail 160)
+          for ($i = 0; $i -lt $lines.Count; $i += 20) {
+            $last = [Math]::Min($i + 19, $lines.Count - 1)
+            $msg = ($lines[$i..$last] -join "`n")
+            $msg = $msg -replace '%', '%25' -replace "`r", '%0D' -replace "`n", '%0A'
+            Write-Host "::error title=build.log ($i)::$msg"
+          }
+
+      - name: Upload the build log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-log
+          path: build.log
+          if-no-files-found: ignore
 
       - name: Upload core.dll
         uses: actions/upload-artifact@v4
