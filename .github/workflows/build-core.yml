@@ -10,6 +10,7 @@ on:
     paths:
       - 'native/pengu/**'
       - 'scripts/build_pengu_core.py'
+      - 'scripts/verify_core_dll.py'
       - '.github/workflows/build-core.yml'
 
 env:
