@@ -1,0 +1,37 @@
+LIBRARY core
+EXPORTS
+	Direct3DCreate9
+	Direct3DCreate9Ex
+	D3DPERF_BeginEvent
+	D3DPERF_EndEvent
+	D3DPERF_GetStatus
+	D3DPERF_QueryRepeatFrame
+	D3DPERF_SetMarker
+	D3DPERF_SetOptions
+	D3DPERF_SetRegion
+
+EXPORTS
+	DWriteCreateFactory
+
+EXPORTS
+	GetFileVersionInfoA
+	GetFileVersionInfoByHandle
+	GetFileVersionInfoExA
+	GetFileVersionInfoExW
+	GetFileVersionInfoSizeA
+	GetFileVersionInfoSizeExA
+	GetFileVersionInfoSizeExW
+	GetFileVersionInfoSizeW
+	GetFileVersionInfoW
+	VerFindFileA
+	VerFindFileW
+	VerInstallFileA
+	VerInstallFileW
+	VerLanguageNameA
+	VerLanguageNameW
+	VerQueryValueA
+	VerQueryValueW
+    
+EXPORTS
+    _GetCefVersion			@5000 NONAME
+	_BootstrapEntry			@6000 NONAME

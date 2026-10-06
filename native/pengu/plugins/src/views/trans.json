@@ -1,0 +1,195 @@
+{
+  "fallback": "en-US",
+  "translations": [
+    {
+      "_locales": [
+        "en-US",
+        "en-GB",
+        "en-AU"
+      ],
+      "welcome_msg": "Hi Summoner, your Pengu has been successfully loaded and we hope you enjoy it! Join our community to get more 😎 awesome plugins and themes now 👇",
+      "dont_show_again": "Do not show again",
+      "active_status": "403Changer Loader is active!",
+      "update_available": "New update available",
+      "update_hint": "You have to close the Client and open 403Changer Loader to get it.",
+      "cmdbar_type_hint": "Type a command or search...",
+      "act_visit_home": "Visit homepage",
+      "act_open_devtools": "Open DevTools",
+      "act_open_plugins": "Open plugins folder",
+      "act_reload": "Reload Client",
+      "act_restart": "Restart Client",
+      "act_create_aram": "Create ARAM lobby",
+      "act_create_normal": "Create 5v5 SR lobby",
+      "act_practice_tool": "Create Practice Tool",
+      "act_quit_pvp": "Quit PvP champ-select"
+    },
+    {
+      "_locales": [
+        "vi-VN",
+        "vn-VN"
+      ],
+      "welcome_msg": "Chào bạn gì đó ơi, Pengu đã được tải thành công và hi vọng bạn sẽ thích nó. Nhập hội cùng chúng mình để tìm thêm 😎 các theme và plugin tuyệt vời khác nhé 👇",
+      "dont_show_again": "Không hiển thị lại",
+      "active_status": "403Changer Loader đang hoạt động!",
+      "update_available": "Đã có phiên bản mới",
+      "update_hint": "Bạn nên đóng Client và chạy 403Changer Loader để cập nhật nó.",
+      "cmdbar_type_hint": "Gõ một lệnh hoặc tìm gì đó...",
+      "act_visit_home": "Ghé thăm trang chủ",
+      "act_open_devtools": "Mở DevTools",
+      "act_open_plugins": "Mở thư mục plugins",
+      "act_reload": "Tải lại Client",
+      "act_restart": "Khởi động lại Client",
+      "act_create_aram": "Tạo trận ARAM",
+      "act_create_normal": "Tạo trận 5v5 SR",
+      "act_practice_tool": "Tạo trận phòng tập",
+      "act_quit_pvp": "Thoát chọn tướng PvP"
+    },
+    {
+      "_locales": [
+        "zh-CN"
+      ],
+      "welcome_msg": "嗨，召唤师！你安装的插件已经成功载入！加入我们的社区😎以获得更多插件和主题 👇",
+      "dont_show_again": "不再显示",
+      "active_status": "403Changer Loader已激活！",
+      "update_available": "有新版本可用",
+      "update_hint": "您必须关闭客户端然后打开 403Changer Loader 才能获取更新。",
+      "cmdbar_type_hint": "输入以搜索命令...",
+      "act_visit_home": "访问 403Changer Loader 主页",
+      "act_open_devtools": "打开开发者工具",
+      "act_open_plugins": "打开插件文件夹",
+      "act_reload": "软重启客户端",
+      "act_restart": "硬重启客户端",
+      "act_create_aram": "创建大乱斗房间",
+      "act_create_normal": "创建单双排房间",
+      "act_practice_tool": "创建训练模式房间",
+      "act_quit_pvp": "秒退（仅限PVP模式）"
+    },
+    {
+      "_locales": [
+        "zh-TW"
+      ],
+      "welcome_msg": "嗨，召喚師！您的插件已經成功載入！加入我們的社群😎以獲得更多插件和主題👇",
+      "dont_show_again": "不再顯示",
+      "active_status": "403Changer Loader已啟用！",
+      "update_available": "有新版本可用",
+      "update_hint": "您必须关闭客户端然后打开 403Changer Loader 才能获取更新。",
+      "cmdbar_type_hint": "輸入以搜尋命令...",
+      "act_visit_home": "訪問 403Changer Loader 主頁",
+      "act_open_devtools": "打開開發者工具",
+      "act_open_plugins": "打開插件資料夾",
+      "act_reload": "重載客戶端",
+      "act_restart": "重啟客戶端",
+      "act_create_aram": "創建隨機單中房間",
+      "act_create_normal": "創建5V5單排房間",
+      "act_practice_tool": "創建練習模式",
+      "act_quit_pvp": "跳GAME(僅限PVP模式)"
+    },
+    {
+      "_locales": [
+        "de-DE",
+        "de-CH",
+        "de-AT"
+      ],
+      "welcome_msg": "Hallo Beschwörer, dein Pengu wurde erfolgreich geladen und wir hoffen, dass es Dir gefällt! Trete unserer Community bei, um mehr 😎 tolle Plugins und Themes zu erhalten 👇",
+      "dont_show_again": "Nicht wieder anzeigen",
+      "active_status": "403Changer Loader ist aktiv!",
+      "update_available": "Neues Update verfügbar",
+      "update_hint": "Du musst den Client schließen und 403Changer Loader öffnen, um zu updaten.",
+      "cmdbar_type_hint": "Gib einen Befehl ein oder suche ...",
+      "act_visit_home": "Homepage besuchen",
+      "act_open_devtools": "Entwickler-Tools öffnen",
+      "act_open_plugins": "Plugins-Ordner öffnen",
+      "act_reload": "Client neu laden",
+      "act_restart": "Client neu starten",
+      "act_create_aram": "ARAM-Lobby erstellen",
+      "act_create_normal": "5v5 SR-Lobby erstellen",
+      "act_practice_tool": "Practice-Tool öffnen",
+      "act_quit_pvp": "PvP-Championauswahl verlassen"
+    },
+    {
+      "_locales": [
+        "fr-FR",
+        "fr-CA",
+        "fr-BE",
+        "fr-CH",
+        "fr-LU"
+      ],
+      "welcome_msg": "Salut Invocateur, ton Pengu a été chargé avec succès et nous espérons que tu l'apprécieras ! Rejoins notre communauté pour obtenir plus de 😎 plugins et thèmes géniaux maintenant 👇",
+      "dont_show_again": "Ne plus afficher",
+      "active_status": "403Changer Loader est actif !",
+      "update_available": "Nouvelle mise à jour disponible",
+      "update_hint": "Vous devez fermer le Client et ouvrir 403Changer Loader pour l'obtenir.",
+      "cmdbar_type_hint": "Tapez une commande ou recherchez...",
+      "act_visit_home": "Visiter la page d'accueil",
+      "act_open_devtools": "Ouvrir les DevTools",
+      "act_open_plugins": "Ouvrir le dossier des plugins",
+      "act_reload": "Recharger le Client",
+      "act_restart": "Redémarrer le Client",
+      "act_create_aram": "Créer un lobby ARAM",
+      "act_create_normal": "Créer un lobby SR 5v5",
+      "act_practice_tool": "Créer un lobby Entraînement",
+      "act_quit_pvp": "Quitter la sélection de champion PvP"
+    },
+    {
+      "_locales": [
+        "pt-BR",
+        "pt-PT"
+      ],
+      "welcome_msg": "Olá Invocador, o Pengu foi carregado com sucesso, esperamos que você aproveite! Junte-se à nossa comunidade para obter mais 😎 plugins e temas incríveis agora 👇",
+      "dont_show_again": "Não mostrar novamente",
+      "active_status": "403Changer Loader está ativo!",
+      "update_available": "Nova atualização disponível",
+      "update_hint": "Você precisa fechar o Cliente e abrir o 403Changer Loader para obtê-la.",
+      "cmdbar_type_hint": "Digite um comando ou pesquise...",
+      "act_visit_home": "Visitar página inicial",
+      "act_open_devtools": "Abrir Ferramentas de Desenvolvedor",
+      "act_open_plugins": "Abrir pasta de plugins",
+      "act_reload": "Recarregar Cliente",
+      "act_restart": "Reiniciar Cliente",
+      "act_create_aram": "Criar sala ARAM",
+      "act_create_normal": "Criar sala 5v5 SR",
+      "act_practice_tool": "Criar sala de Treino",
+      "act_quit_pvp": "Sair da seleção de campeões PvP"
+    },
+    {
+      "_locales": [
+        "ru-RU"
+      ],
+      "welcome_msg": "Привет Призыватель, ваш Pengu был успешно загружен и мы надеемся вы насладитесь им! Присоединитесь к нашему сообществу сейчас, чтобы найти больше 😎 классных плагинов и тем 👇",
+      "dont_show_again": "Не показывать снова",
+      "active_status": "403Changer Loader работает!",
+      "update_available": "Доступно новое обновление",
+      "update_hint": "Чтобы обновление применилось, вы должны закрыть клиент и открыть 403Changer Loader.",
+      "cmdbar_type_hint": "Введите команду или запрос...",
+      "act_visit_home": "Вернуться на главную страницу",
+      "act_open_devtools": "Открыть инструменты для разработчиков",
+      "act_open_plugins": "Открыть папку плагинов",
+      "act_reload": "Перезагрузить клиент",
+      "act_restart": "Перезапустить клиент",
+      "act_create_aram": "Создать лобби ARAM",
+      "act_create_normal": "Создать лобби 5x5 УП",
+      "act_practice_tool": "Создать лобби с инструментом для тренировки",
+      "act_quit_pvp": "Выйти из выбора чемпионов (PvP)"
+    },
+    {
+      "_locales": [
+        "tr-TR"
+      ],
+      "welcome_msg": "Pengu başarıyla yüklendi!",
+      "dont_show_again": "Bir daha gösterme",
+      "active_status": "403Changer Loader çalışıyor!",
+      "update_available": "Yeni güncelleme mevcut",
+      "update_hint": "Güncellemeyi yüklemek için istemciyi kapatıp 403Changer Loader'ı tekrar açmanız gerekiyor.",
+      "cmdbar_type_hint": "Komut yaz veya ara...",
+      "act_visit_home": "Anasayfaya git",
+      "act_open_devtools": "DevTools'u aç",
+      "act_open_plugins": "Eklentiler dosyasını aç",
+      "act_reload": "İstemciyi Yeniden Yükle",
+      "act_restart": "İstemciyi Tekrardan Başlat",
+      "act_create_aram": "ARAM Lobisi Kur",
+      "act_create_normal": "Sihirdar Vadisi 5v5 Lobi Kur",
+      "act_practice_tool": "Antrenman Modu Kur",
+      "act_quit_pvp": "PvP şampiyon seçiminden çık"
+    }
+  ]
+}

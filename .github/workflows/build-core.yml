@@ -1,0 +1,47 @@
+name: Build 403Changer Loader core
+
+# Builds native/pengu into core.dll on a Windows runner (MSVC + Node preinstalled)
+# and uploads it as an artifact. It never touches "Pengu Loader/core.dll" in the
+# repo: download the artifact and swap it in once it has been tested.
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'native/pengu/**'
+      - 'scripts/build_pengu_core.py'
+      - '.github/workflows/build-core.yml'
+
+jobs:
+  core:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Enable pnpm
+        run: corepack enable
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Set up MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Build core.dll
+        run: python scripts/build_pengu_core.py
+
+      - name: Upload core.dll
+        uses: actions/upload-artifact@v4
+        with:
+          name: 403Changer-core-dll
+          path: native/pengu/out/core.dll
+          if-no-files-found: error

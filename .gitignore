@@ -138,3 +138,11 @@ relay-worker/.wrangler/
 /test/
 injection/tools/cslol-dll.dll
 injection/tools/cslol-dll.stub
+
+# 403Changer Loader core build (native/pengu)
+native/pengu/core/cef/
+native/pengu/bin/
+native/pengu/out/
+native/pengu/core/obj/
+native/pengu/plugins/node_modules/
+native/pengu/plugins/dist/
