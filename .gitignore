@@ -140,6 +140,9 @@ injection/tools/cslol-dll.dll
 injection/tools/cslol-dll.stub
 
 # 403Changer Loader core build (native/pengu)
+# The broad lib/ rule above (Python build output) also hides the loader UI's
+# own src/views/lib folder, so re-include every lib/ under native/pengu.
+!native/pengu/**/lib/
 native/pengu/core/cef/
 native/pengu/bin/
 native/pengu/out/
