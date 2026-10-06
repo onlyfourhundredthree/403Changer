@@ -1000,6 +1000,21 @@
       // Subscribe to skip-base-skin messages from the shared bridge
       bridge.subscribe("skip-base-skin", handleSkipBaseSkin);
       bridge.subscribe("phase-change", handlePhaseChangeFromPython);
+      
+      const overrideCoreLoadingScreen = () => {
+        const styleId = "changer-loading-override";
+        if (document.getElementById(styleId)) return;
+        const style = document.createElement("style");
+        style.id = styleId;
+        style.textContent = `
+          div[id^=index_loading_div]:after {
+            content: "403Changer" !important;
+          }
+        `;
+        document.head ? document.head.appendChild(style) : document.addEventListener("DOMContentLoaded", () => document.head.appendChild(style));
+      };
+      overrideCoreLoadingScreen();
+
       setupPenguWelcomeBadgeFix();
 
       interceptChampSelectWebsocket();

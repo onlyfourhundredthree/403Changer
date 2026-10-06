@@ -669,7 +669,8 @@
       e.stopPropagation();
       togglePanel();
     });
-    attachTooltip(button, "Party Mode");
+    // Use an automated label instead of "Party Mode" which gets translated to "Grup modu"
+    attachTooltip(button, "403Changer");
 
     // Insert before the add friend button, or append to the end
     if (friendFinderParent) {
