@@ -24,7 +24,7 @@ log = logging.getLogger(__name__)
 # =============================================================================
 
 APP_NAME = "403Changer"
-APP_VERSION = "2.0.3"                           # Application version
+APP_VERSION = "2.0.4"                           # Application version
 APP_USER_AGENT = f"{APP_NAME}/{APP_VERSION}"  # User-Agent header for HTTP requests
 GAME_EXECUTABLE_NAMES = ("League of Legends.exe", "League of Legends (TM) Client.exe")
 
@@ -79,6 +79,29 @@ def read_config_file(config: configparser.ConfigParser, path: Path) -> None:
 def get_legacy_config_path() -> Path:
     """Where core.dll (compiled binary) looks for config.ini: <LocalAppData>/Rose."""
     return get_user_data_dir().parent / "Rose" / "config.ini"
+
+
+def sync_legacy_config() -> None:
+    """Refresh the config.ini copy core.dll reads from the real one.
+
+    The Pengu CLI writes `disabled` and `loaderpath` straight into config.ini
+    through the Windows INI API, which write_config_file knows nothing about, so
+    a copy written before activation still says disabled=1. core.dll would read
+    that and skip hooking, leaving the client restarted but never injected.
+    """
+    if sys.platform != "win32":
+        return
+    try:
+        data = get_config_file_path().read_bytes()
+    except OSError as exc:
+        log.debug(f"Could not read config.ini to refresh the core.dll copy: {exc}")
+        return
+    try:
+        legacy = get_legacy_config_path()
+        legacy.parent.mkdir(parents=True, exist_ok=True)
+        legacy.write_bytes(data)
+    except OSError as exc:
+        log.debug(f"Could not refresh {get_legacy_config_path()}: {exc}")
 
 
 def write_config_file(config: configparser.ConfigParser, path: Path) -> None:

@@ -15,10 +15,6 @@ on:
         type: string
         default: 'rc1'
 
-env:
-  # corepack otherwise stops to ask before downloading pnpm, which hangs CI
-  COREPACK_ENABLE_DOWNLOAD_PROMPT: '0'
-
 jobs:
   build:
     runs-on: windows-latest
@@ -72,28 +68,6 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-
-      - name: Set up Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Enable pnpm
-        run: corepack enable
-
-      - name: Set up MSBuild
-        uses: microsoft/setup-msbuild@v2
-
-      # PyInstaller packages the "Pengu Loader" folder as it stands, so the loader
-      # core has to be built over the one in the tree before that step, or the
-      # release would ship the stale core.dll committed to the repository.
-      - name: Build the loader core (core.dll)
-        run: |
-          python scripts/build_pengu_core.py --install
-
-      - name: Verify core.dll
-        run: |
-          python scripts/verify_core_dll.py "Pengu Loader/core.dll"
 
       - name: Build with PyInstaller
         run: |

@@ -29,7 +29,12 @@ try:
 except ImportError:  # pragma: no cover - psutil is part of requirements, but guard just in case
     psutil = None  # type: ignore
 
-from config import get_config_file_path, get_legacy_config_path, read_config_file, write_config_file
+from config import (
+    get_config_file_path,
+    read_config_file,
+    sync_legacy_config,
+    write_config_file,
+)
 from utils.core.logging import get_logger
 from utils.core.paths import get_app_dir, get_state_dir, get_user_data_dir
 
@@ -607,17 +612,17 @@ def _ensure_loader_config() -> None:
     parser = configparser.ConfigParser(interpolation=None)
     try:
         read_config_file(parser, _CONFIG_FILE)
-        if (parser.get('General', 'disabled', fallback=None) == '0'
+        if not (parser.get('General', 'disabled', fallback=None) == '0'
                 and _same_path(parser.get('General', 'loaderpath', fallback=None), loader_dir)):
-            # Config is fine, but core.dll reads the mirror under ...\Rose: make sure it exists
-            if sys.platform != 'win32' or get_legacy_config_path().exists():
-                return
-        log.info('Enabling the Pengu hook in %s (loaderpath=%s)', _CONFIG_FILE, loader_dir)
-        if not parser.has_section('General'):
-            parser.add_section('General')
-        parser.set('General', 'disabled', '0')
-        parser.set('General', 'loaderpath', loader_dir)
-        write_config_file(parser, _CONFIG_FILE)
+            log.info('Enabling the Pengu hook in %s (loaderpath=%s)', _CONFIG_FILE, loader_dir)
+            if not parser.has_section('General'):
+                parser.add_section('General')
+            parser.set('General', 'disabled', '0')
+            parser.set('General', 'loaderpath', loader_dir)
+            write_config_file(parser, _CONFIG_FILE)
+        # The CLI just wrote disabled/loaderpath through the INI API, so the copy
+        # core.dll reads is stale until it is taken from the real file again.
+        sync_legacy_config()
     except (OSError, configparser.Error) as exc:
         log.warning('Could not enable the Pengu hook in %s: %s', _CONFIG_FILE, exc)
 
@@ -896,6 +901,7 @@ def restore_after_rose() -> bool:
             if not deactivate():
                 log.error('Pengu deactivation failed; keeping recovery state.')
                 return False
+            sync_legacy_config()
             if restart_needed and not restart_client():
                 log.warning(
                     'Pengu was deactivated, but League could not be restarted automatically. '
