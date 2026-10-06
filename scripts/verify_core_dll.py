@@ -20,10 +20,14 @@ REQUIRED_ORDINALS = {
     5000: "_GetCefVersion",
     6000: "_BootstrapEntry (the IFEO debugger entry point)",
 }
+# Compiled-in literals, not runtime paths: the log path is joined from two of
+# these at runtime, so it never appears whole in the binary.
 REQUIRED_STRINGS = [
-    "\\403Changer\\config.ini",
-    "\\403Changer\\core.log",
-    "\\Rose\\config.ini",  # still read, so old installs keep working
+    ("\\403Changer\\config.ini", "the config the hook reads"),
+    ("\\Rose\\config.ini", "the old config, still read so existing installs keep working"),
+    ("\\403Changer", "the data folder the log path is built from"),
+    ("\\core.log", "the log file name"),
+    ("403Changer Loader", "the version resource compiled in"),
 ]
 # Only the first EXPORTS block of res/module.def ends up in the DLL (the linker
 # takes one), so these d3d9 names are the proxy surface that must be there.
@@ -120,9 +124,9 @@ def main() -> int:
 
     text = data.decode("utf-16-le", "ignore")
     print("strings :")
-    for needle in REQUIRED_STRINGS:
+    for needle, why in REQUIRED_STRINGS:
         ok = needle in text
-        print(f"  {'OK  ' if ok else 'FAIL'} {needle}")
+        print(f"  {'OK  ' if ok else 'FAIL'} {needle:<26} {why}")
         if not ok:
             problems.append(f"the string {needle} is missing")
 
