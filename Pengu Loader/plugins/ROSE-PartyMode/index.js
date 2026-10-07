@@ -551,37 +551,6 @@
       background-color: #4ade80;
     }
 
-    /* 403Changer badge on the lobby cards of players connected through party mode */
-    .changer-party-badge {
-      position: absolute;
-      top: 6px;
-      right: 6px;
-      z-index: 100;
-      background: linear-gradient(135deg, #0acbe6, #005a82);
-      border: 1px solid #c8aa6e;
-      border-radius: 10px;
-      padding: 2px 7px;
-      color: #ffffff;
-      font-family: var(--font-display), "Beaufort for LOL", Arial, sans-serif;
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 0.05em;
-      box-shadow: 0 0 8px rgba(10, 203, 230, 0.7);
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      cursor: default;
-      pointer-events: auto;
-    }
-
-    .changer-party-badge .dot {
-      width: 6px;
-      height: 6px;
-      background-color: #4ade80;
-      border-radius: 50%;
-      box-shadow: 0 0 4px #4ade80;
-    }
-
     `;
   }
 
@@ -1212,48 +1181,142 @@
     }, 500);
   }
 
-  // Summoner ids of everyone we are connected to through party mode, us included.
-  function partyMemberIds() {
-    const ids = new Set();
-    if (!partyState.enabled) return ids;
-    for (const peer of partyState.peers || []) {
-      if (peer.connected && peer.summoner_id) ids.add(String(peer.summoner_id));
-    }
-    // We only count as connected once someone else is: a badge on our own card
-    // alone would say "party active" when nobody is there to share with.
-    if (ids.size && partyState.my_summoner_id) ids.add(String(partyState.my_summoner_id));
-    return ids;
+  // ---- 403Changer icon next to the names of lobby players who run it ----
+  //
+  // Who runs it is known from party mode: everyone in the lobby with the app open
+  // joins the lobby's room. Each lobby card carries its player's summoner id, which
+  // picks the card; the name inside it is then found by its text, because where the
+  // client puts the name (which element, which shadow root) is its own business and
+  // changes between patches.
+  const nameIcons = new Map(); // summoner id -> the icon we placed
+  const nameIconMisses = new Map(); // summoner id -> passes without finding the name
+  let nameIconReported = "";
+
+  function normalizeName(text) {
+    return (text || "").replace(/\s+/g, " ").trim().toLowerCase();
   }
 
-  // Marks the lobby cards of players running 403Changer with party mode on.
-  // The cards are matched by the summoner id the client puts on each one, not by
-  // the displayed name, which can be cut short or shared by two players.
-  function updateLobbyMemberBadges() {
-    const ids = isInLobby() ? partyMemberIds() : new Set();
-    const wanted = new Set();
+  // Every player known to run 403Changer in this lobby: id -> displayed name.
+  function changerUsers() {
+    const users = new Map();
+    if (!partyState.enabled) return users;
+    if (partyState.my_summoner_id && partyState.my_summoner_name) {
+      users.set(String(partyState.my_summoner_id), partyState.my_summoner_name);
+    }
+    for (const peer of partyState.peers || []) {
+      if (peer.connected && peer.summoner_id && peer.summoner_name) {
+        users.set(String(peer.summoner_id), peer.summoner_name);
+      }
+    }
+    return users;
+  }
 
-    if (ids.size) {
-      document.querySelectorAll("lol-regalia-parties-v2-element[summoner-id]").forEach((el) => {
-        if (!ids.has(String(el.getAttribute("summoner-id")))) return;
-        const card = el.closest(".v2-banner-component") || el.parentElement;
-        if (card) wanted.add(card);
-      });
+  // All elements under root, going into open shadow roots as well.
+  function* elementsDeep(root) {
+    const walker = (root.ownerDocument || document).createTreeWalker(root, 1 /* SHOW_ELEMENT */);
+    let node = walker.currentNode === root && root.nodeType === 1 ? root : walker.nextNode();
+    while (node) {
+      yield node;
+      if (node.shadowRoot) yield* elementsDeep(node.shadowRoot);
+      node = walker.nextNode();
+    }
+  }
+
+  // The innermost element showing exactly this name (or the name and a short tag).
+  function findNameElement(scope, name) {
+    const target = normalizeName(name);
+    if (!target) return null;
+    let exact = null;
+    let loose = null;
+    for (const el of elementsDeep(scope)) {
+      if (el.classList && el.classList.contains("changer-name-icon")) continue;
+      const text = normalizeName(el.textContent);
+      if (!text) continue;
+      if (text === target) exact = el; // later matches are deeper: keep the last
+      else if (!exact && text.startsWith(target) && text.length <= target.length + 8) loose = el;
+    }
+    return exact || loose;
+  }
+
+  // The name may sit beside the element carrying the id rather than inside it, so
+  // widen the search one ancestor at a time, never into a container shared by
+  // several players.
+  function findNameForCard(idElement, name) {
+    let scope = idElement;
+    for (let depth = 0; depth < 6 && scope; depth++) {
+      if (depth && scope.querySelectorAll("[summoner-id]").length > 1) break;
+      const found = findNameElement(scope, name);
+      if (found) return found;
+      scope = scope.parentElement;
+    }
+    return null;
+  }
+
+  function createNameIcon() {
+    const icon = document.createElement("img");
+    icon.className = "changer-name-icon";
+    icon.src = `http://127.0.0.1:${BRIDGE_PORT}/asset/icon.png`;
+    icon.alt = "403";
+    icon.title = "403Changer";
+    // Inline, since a stylesheet in the page does not reach into a shadow root
+    icon.style.cssText =
+      "display:inline-block;width:14px;height:14px;margin-left:5px;border-radius:3px;" +
+      "vertical-align:middle;flex:none;pointer-events:auto;";
+    return icon;
+  }
+
+  // A short outline of what the card is made of, for the log when the name is not found.
+  function describeCard(idElement) {
+    const scope = idElement.closest(".v2-banner-component") || idElement.parentElement || idElement;
+    const parts = [];
+    for (const el of elementsDeep(scope)) {
+      if (parts.length >= 60) break;
+      const own = [...el.childNodes].filter((n) => n.nodeType === 3).map((n) => n.textContent.trim()).join(" ").trim();
+      const classes = typeof el.className === "string" && el.className ? "." + el.className.trim().split(/\s+/).join(".") : "";
+      parts.push(el.tagName.toLowerCase() + classes + (own ? `="${own.slice(0, 24)}"` : ""));
+    }
+    return parts.join(" > ").slice(0, 1800);
+  }
+
+  function reportNameIcons(message) {
+    if (message === nameIconReported) return;
+    nameIconReported = message;
+    sendBridgeMessage({ type: "chroma-log", source: "PartyMode", level: "info", message, timestamp: Date.now() });
+  }
+
+  function updateLobbyMemberBadges() {
+    const users = isInLobby() ? changerUsers() : new Map();
+
+    for (const [id, icon] of nameIcons) {
+      if (!users.has(id) || !icon.isConnected) {
+        icon.remove();
+        nameIcons.delete(id);
+      }
+    }
+    if (!users.size) {
+      nameIconMisses.clear();
+      return;
     }
 
-    document.querySelectorAll(".changer-party-badge").forEach((badge) => {
-      if (!wanted.has(badge.parentElement)) badge.remove();
-    });
+    document.querySelectorAll("lol-regalia-parties-v2-element[summoner-id]").forEach((idElement) => {
+      const id = String(idElement.getAttribute("summoner-id"));
+      if (!users.has(id) || nameIcons.has(id)) return;
 
-    wanted.forEach((card) => {
-      if (card.querySelector(":scope > .changer-party-badge")) return;
-      if (getComputedStyle(card).position === "static") card.style.position = "relative";
-      const badge = document.createElement("div");
-      badge.className = "changer-party-badge";
-      badge.title = "403Changer";
-      const dot = document.createElement("span");
-      dot.className = "dot";
-      badge.append(dot, " 403");
-      card.appendChild(badge);
+      const nameElement = findNameForCard(idElement, users.get(id));
+      if (!nameElement) {
+        // Cards fill in a moment after they appear: only call it missing after a while
+        const misses = (nameIconMisses.get(id) || 0) + 1;
+        nameIconMisses.set(id, misses);
+        if (misses === 8) {
+          reportNameIcons(`name not found on the lobby card of "${users.get(id)}": ${describeCard(idElement)}`);
+        }
+        return;
+      }
+      const icon = createNameIcon();
+      nameElement.appendChild(icon);
+      nameIcons.set(id, icon);
+      nameIconMisses.delete(id);
+      reportNameIcons(`icon placed next to ${nameIcons.size} name(s) in the lobby, on <${nameElement.tagName.toLowerCase()} class="${nameElement.className || ""}">`);
     });
   }
 
