@@ -128,6 +128,27 @@ def _sanitize_plugin_entrypoints(pengu_dir: Path) -> None:
         log.debug("Failed to sanitize plugin entrypoints: %s", exc)
 
 
+# The loader's window used to "update" itself from the app's releases, which
+# unpacked the whole app into the loader's folder on every start. None of these
+# belong next to Pengu Loader.exe, so a copy left there is removed.
+_STRAY_APP_FILES = ("403Changer.exe", "_internal", "icon.ico", "unins000.exe", "unins000.dat")
+
+
+def _remove_stray_app_files(pengu_dir: Path) -> None:
+    for name in _STRAY_APP_FILES:
+        stray = pengu_dir / name
+        try:
+            if stray.is_dir():
+                shutil.rmtree(stray)
+            elif stray.exists():
+                stray.unlink()
+            else:
+                continue
+            log.info("Removed %s left in the loader folder by its old self-update", name)
+        except OSError as exc:
+            log.debug("Could not remove %s from the loader folder: %s", stray, exc)
+
+
 def _snapshot_plugin_enable_state(pengu_dir: Path) -> tuple[set[str], set[str]]:
     """
     Snapshot the user's enabled/disabled state for plugins before overlay sync.
@@ -273,6 +294,8 @@ def _resolve_pengu_dir() -> Path:
         #   %LOCALAPPDATA%\Rose\Pengu Loader\plugins
         # Deleting the runtime directory on each launch wipes those user-installed plugins.
         runtime_dir.mkdir(parents=True, exist_ok=True)
+
+        _remove_stray_app_files(runtime_dir)
 
         # Snapshot plugin enabled/disabled state BEFORE overlaying bundled files.
         enabled_plugins, disabled_plugins = _snapshot_plugin_enable_state(runtime_dir)

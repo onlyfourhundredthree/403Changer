@@ -69,6 +69,28 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Set up MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      # Pengu Loader.exe is built from vendor/PenguLoader-1.1.6 so the shipped
+      # loader is the source in this repository, not whichever build was last
+      # committed next to it.
+      - name: Build Pengu Loader from source
+        run: python scripts/build_pengu_loader.py
+
+      # --status only reads the registry: 0 is active, 1 is inactive. Anything
+      # else means the loader could not even start, which would leave every
+      # install unable to switch the hook on.
+      - name: Smoke-test the loader
+        shell: pwsh
+        run: |
+          $p = Start-Process -FilePath "Pengu Loader/Pengu Loader.exe" -ArgumentList '--status','--silent' -Wait -PassThru
+          Write-Host "Pengu Loader --status exit code: $($p.ExitCode)"
+          if ($p.ExitCode -ne 0 -and $p.ExitCode -ne 1) {
+            Write-Host "::error::Pengu Loader.exe --status exited with $($p.ExitCode)"
+            exit 1
+          }
+
       - name: Build with PyInstaller
         run: |
           python scripts/build_pyinstaller.py

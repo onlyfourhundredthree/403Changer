@@ -30,7 +30,10 @@ namespace PenguLoader
             Topmost = false;
 
             GC.Collect();
-            Updater.CheckUpdate();
+            // No self-update: 403Changer ships this loader and replaces it with its own
+            // updates. Program.GithubRepo is the app's repository, so the check found the
+            // app's newer tag, unpacked the whole app into this folder, restarted, and
+            // found the same tag again, forever.
         }
 
         private void ThemeButtonClick(object sender, RoutedEventArgs e)
