@@ -11,7 +11,7 @@ on:
         type: boolean
         default: false
       tag_suffix:
-        description: 'Tag suffix, e.g. rc1 -> v2.0.3-rc1 (prerelease). Empty publishes a final release.'
+        description: 'Tag suffix, e.g. rc1 -> v2.0.3-rc1 (prerelease). "final" publishes v2.0.3 to everyone.'
         type: string
         default: 'rc1'
 
@@ -51,6 +51,9 @@ jobs:
           else
             version=$(python -c "import re,pathlib;print(re.search(r'^APP_VERSION\s*=\s*\"([^\"]+)\"',pathlib.Path('config.py').read_text(encoding='utf-8'),re.M).group(1))")
             suffix="${TAG_SUFFIX:-}"
+            # An empty input falls back to the default, so a final release is asked
+            # for by name rather than by leaving the suffix out.
+            if [ "$suffix" = "final" ]; then suffix=""; fi
             tag="v${version}${suffix:+-${suffix}}"
           fi
           # A suffixed tag (v2.0.3-rc1) publishes as a prerelease. The app's updater
