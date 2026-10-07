@@ -4,7 +4,7 @@
 Pengu Skin Monitor
 ------------------
 
-Receives skin hover notifications from the Pengu Loader `ROSE-SkinMonitor` plugin
+Receives skin hover notifications from the Pengu Loader `403C-SkinMonitor` plugin
 over WebSocket and updates the shared application state accordingly. This
 replaces the legacy UIA-based skin detection pipeline.
 """

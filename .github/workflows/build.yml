@@ -95,6 +95,20 @@ jobs:
         run: |
           python scripts/build_pyinstaller.py
 
+      # The app overlays bundled_plugins onto the loader's plugins at start, so an
+      # install whose updater skipped "Pengu Loader\plugins" still gets them. A
+      # build missing either copy would leave the client with no plugins.
+      - name: Check the plugins are packaged
+        shell: pwsh
+        run: |
+          $root = "dist/403Changer/_internal"
+          foreach ($p in "Pengu Loader/plugins/403C-UI/index.js", "bundled_plugins/403C-UI/index.js", "bundled_plugins/403C-SkinMonitor/index.js") {
+            if (-not (Test-Path "$root/$p")) { Write-Host "::error::missing $root/$p"; exit 1 }
+          }
+          $old = @(Get-ChildItem "$root/Pengu Loader/plugins", "$root/bundled_plugins" -Directory -Filter "ROSE-*")
+          if ($old.Count) { Write-Host "::error::pre-rename plugin folders packaged: $($old.Name -join ', ')"; exit 1 }
+          Write-Host "plugins: $((Get-ChildItem "$root/bundled_plugins" -Directory).Count) in bundled_plugins"
+
       - name: Create Windows Installer
         run: |
           python scripts/create_installer.py

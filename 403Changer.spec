@@ -123,6 +123,14 @@ if pengu_loader_dir.exists() and pengu_loader_dir.is_dir():
         dest_dir = (Path('Pengu Loader') / rel).parent
         datas += [(str(src), str(dest_dir))]
         bundled_count += 1
+        # A second copy of the plugins, outside "Pengu Loader\plugins". The updater
+        # batch is written by the version being replaced: older ones leave that
+        # folder out of the mirror and then sync only ROSE-* into it, so after the
+        # rename an auto-updated install could keep the old plugins and never get
+        # the new ones. This folder is mirrored like any other, and the app
+        # overlays it onto the runtime plugins itself (see _resolve_pengu_dir).
+        if rel.parts and rel.parts[0].lower() == 'plugins' and len(rel.parts) > 1:
+            datas += [(str(src), str((Path('bundled_plugins') / Path(*rel.parts[1:])).parent))]
     print(f"[OK] Pengu Loader directory bundled ({bundled_count} files)")
     if skipped:
         print(f"[INFO] Skipped runtime/local files: {', '.join(skipped)}")
