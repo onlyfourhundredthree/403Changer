@@ -157,7 +157,7 @@ class UpdateInstaller:
                 batch.write('echo [%date% %time%] Updating ROSE plugins (preserving user-installed) >> "%LOG%"\n')
                 batch.write('if exist "%SOURCE%\\Pengu Loader\\plugins" (\n')
                 batch.write('    if not exist "%DEST%\\Pengu Loader\\plugins" mkdir "%DEST%\\Pengu Loader\\plugins"\n')
-                batch.write('    for /d %%D in ("%SOURCE%\\Pengu Loader\\plugins\\403C-*") do (\n')
+                batch.write('    for /d %%D in ("%SOURCE%\\Pengu Loader\\plugins\\ROSE-*") do (\n')
                 batch.write('        echo [%date% %time%]   Sync plugin %%~nxD >> "%LOG%"\n')
                 batch.write('        robocopy "%%D" "%DEST%\\Pengu Loader\\plugins\\%%~nxD" /MIR /NFL /NDL /NJH /NJS /XD __pycache__ >> "%LOG%" 2>&1\n')
                 batch.write('    )\n')

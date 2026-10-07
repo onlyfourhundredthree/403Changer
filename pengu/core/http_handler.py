@@ -115,7 +115,7 @@ class HTTPHandler:
                     str(self.port).encode('utf-8')
                 )
             
-            # The language of 403Changer's menus and its texts (403C-I18n)
+            # The language of 403Changer's menus and its texts (ROSE-I18n)
             if path_clean == "/i18n":
                 import json
                 from utils.core.i18n import i18n_payload
