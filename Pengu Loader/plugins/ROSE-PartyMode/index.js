@@ -551,6 +551,37 @@
       background-color: #4ade80;
     }
 
+    /* 403Changer badge on the lobby cards of players connected through party mode */
+    .changer-party-badge {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      z-index: 100;
+      background: linear-gradient(135deg, #0acbe6, #005a82);
+      border: 1px solid #c8aa6e;
+      border-radius: 10px;
+      padding: 2px 7px;
+      color: #ffffff;
+      font-family: var(--font-display), "Beaufort for LOL", Arial, sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      box-shadow: 0 0 8px rgba(10, 203, 230, 0.7);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      cursor: default;
+      pointer-events: auto;
+    }
+
+    .changer-party-badge .dot {
+      width: 6px;
+      height: 6px;
+      background-color: #4ade80;
+      border-radius: 50%;
+      box-shadow: 0 0 4px #4ade80;
+    }
+
     `;
   }
 
@@ -1181,8 +1212,49 @@
     }, 500);
   }
 
+  // Summoner ids of everyone we are connected to through party mode, us included.
+  function partyMemberIds() {
+    const ids = new Set();
+    if (!partyState.enabled) return ids;
+    for (const peer of partyState.peers || []) {
+      if (peer.connected && peer.summoner_id) ids.add(String(peer.summoner_id));
+    }
+    // We only count as connected once someone else is: a badge on our own card
+    // alone would say "party active" when nobody is there to share with.
+    if (ids.size && partyState.my_summoner_id) ids.add(String(partyState.my_summoner_id));
+    return ids;
+  }
+
+  // Marks the lobby cards of players running 403Changer with party mode on.
+  // The cards are matched by the summoner id the client puts on each one, not by
+  // the displayed name, which can be cut short or shared by two players.
   function updateLobbyMemberBadges() {
-    // Feature disabled by user request. The lobby button handles connection status.
+    const ids = isInLobby() ? partyMemberIds() : new Set();
+    const wanted = new Set();
+
+    if (ids.size) {
+      document.querySelectorAll("lol-regalia-parties-v2-element[summoner-id]").forEach((el) => {
+        if (!ids.has(String(el.getAttribute("summoner-id")))) return;
+        const card = el.closest(".v2-banner-component") || el.parentElement;
+        if (card) wanted.add(card);
+      });
+    }
+
+    document.querySelectorAll(".changer-party-badge").forEach((badge) => {
+      if (!wanted.has(badge.parentElement)) badge.remove();
+    });
+
+    wanted.forEach((card) => {
+      if (card.querySelector(":scope > .changer-party-badge")) return;
+      if (getComputedStyle(card).position === "static") card.style.position = "relative";
+      const badge = document.createElement("div");
+      badge.className = "changer-party-badge";
+      badge.title = "403Changer";
+      const dot = document.createElement("span");
+      dot.className = "dot";
+      badge.append(dot, " 403");
+      card.appendChild(badge);
+    });
   }
 
   function stopGamePhaseMonitor() {
