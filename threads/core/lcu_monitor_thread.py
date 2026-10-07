@@ -261,15 +261,49 @@ class LCUMonitorThread(threading.Thread):
                 self.state.party_manager = party_manager
 
             if not party_manager.enabled:
-                import asyncio
                 threading.Thread(
-                    target=lambda: asyncio.run(party_manager.enable()),
+                    target=self._enable_party_on_server_loop,
+                    args=(party_manager,),
                     name="AutoPartyEnable",
                     daemon=True,
                 ).start()
-                log.info("[PARTY] Auto-enabled party mode on LCU connection")
         except Exception as e:
             log.warning(f"[PARTY] Failed to auto-enable party mode: {e}")
+
+    def _enable_party_on_server_loop(self, party_manager) -> None:
+        """Enable party mode on the bridge's event loop, which outlives this call.
+
+        The relay connection is kept alive by tasks enable() leaves running: the
+        receive loop, the keepalive ping, the reconnects. asyncio.run() cancels
+        every task still pending when its coroutine returns, so running enable()
+        there left party mode marked as on with a connection that was closed ten
+        seconds later and never reopened. The bridge's loop runs for the life of
+        the app, the same one the settings panel enables party mode on.
+        """
+        import asyncio
+
+        loop = None
+        # The bridge thread creates its loop as it starts; give it a moment
+        for _ in range(50):
+            ui_thread = getattr(self.state, "ui_skin_thread", None)
+            server = getattr(ui_thread, "websocket_server", None)
+            loop = getattr(server, "loop", None)
+            if loop is not None and loop.is_running():
+                break
+            time.sleep(0.2)
+        else:
+            log.warning("[PARTY] Party mode not auto-enabled: the bridge event loop never started")
+            return
+
+        def report(done) -> None:
+            try:
+                done.result()
+            except Exception as exc:  # noqa: BLE001
+                log.warning(f"[PARTY] Failed to auto-enable party mode: {exc}")
+            else:
+                log.info("[PARTY] Auto-enabled party mode on LCU connection")
+
+        asyncio.run_coroutine_threadsafe(party_manager.enable(), loop).add_done_callback(report)
 
     def _maybe_recover_locked_champ_select_state(self) -> None:
         """Retry late-lock recovery while a locked Champ Select session is active."""

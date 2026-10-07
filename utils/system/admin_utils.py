@@ -96,6 +96,7 @@ def is_registered_for_autostart():
             ['schtasks', '/Query', '/TN', '403Changer'],
             capture_output=True,
             text=True,
+            errors="replace",  # schtasks answers in the OEM code page, not the ANSI one
             creationflags=subprocess.CREATE_NO_WINDOW
         )
         return result.returncode == 0
@@ -143,6 +144,7 @@ def register_autostart():
             cmd,
             capture_output=True,
             text=True,
+            errors="replace",  # schtasks answers in the OEM code page, not the ANSI one
             creationflags=subprocess.CREATE_NO_WINDOW
         )
         
@@ -182,6 +184,7 @@ def unregister_autostart():
             cmd,
             capture_output=True,
             text=True,
+            errors="replace",  # schtasks answers in the OEM code page, not the ANSI one
             creationflags=subprocess.CREATE_NO_WINDOW
         )
         
