@@ -511,7 +511,7 @@ class PartyManager:
                     if self._current_auto_room and self._current_auto_room in self._relays and self._current_auto_room != self._home_room:
                         old_relay = self._relays.pop(self._current_auto_room, None)
                         if old_relay:
-                            await old_relay.close()
+                            await old_relay.disconnect()
                     self._current_auto_room = auto_room
                     await self._join_room(auto_room)
                     await self._publish_state()
@@ -520,7 +520,7 @@ class PartyManager:
                     if self._current_auto_room in self._relays and self._current_auto_room != self._home_room:
                         old_relay = self._relays.pop(self._current_auto_room, None)
                         if old_relay:
-                            await old_relay.close()
+                            await old_relay.disconnect()
                     self._current_auto_room = None
                     self._refresh_peers()
 
